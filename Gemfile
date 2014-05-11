@@ -18,19 +18,20 @@ gem 'nokogiri'
 
 group :development do
   gem 'guard-rspec'
-
 end
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'pry-rails'
+  gem 'pry-debugger'
 end
 
 group :test do
   gem 'faker'
   gem 'capybara'
   gem 'shoulda-matchers'
+  gem 'fakeweb'
 end
 
 # Use ActiveModel has_secure_password
