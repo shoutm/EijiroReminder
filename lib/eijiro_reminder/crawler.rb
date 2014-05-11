@@ -1,5 +1,7 @@
+# encoding: UTF-8
 require 'open-uri'
 require 'nokogiri'
+require 'net/http'
 
 module EijiroReminder
   class Crawler
@@ -16,12 +18,19 @@ module EijiroReminder
       end
 
       @base_url = base_url
-      @paths = paths  
+      @paths = paths
       @id = id
       @password = password
     end
 
     def login
+      params = {MAIL_ADDRESS: @id, PASSWORD: @password, login: 'ログインする'}
+      resp = Net::HTTP.post_form(URI.parse(login_url), params)
+      begin
+        @cookie = resp['Set-Cookie'].split(';').grep(/eowpuser=/)[0] || nil
+      rescue
+        @cookie = nil
+      end
     end
 
     def fetch_allpages
@@ -29,7 +38,7 @@ module EijiroReminder
 
     def fetch_page(page_url)
       open(page_url).read
-    rescue 
+    rescue
       # TODO add Logging mechanism
       nil
     end

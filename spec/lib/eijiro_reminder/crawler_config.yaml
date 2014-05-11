@@ -1,8 +1,10 @@
+# Test environment settings
+fakeweb_enable: true
+
+# Eijiro settings
 base_url: 'https://eowp.alc.co.jp/'
 paths:
   login: 'login'
   wordbook_ej: 'wordbook/ej'
-id:
-  'foo@bar.com'
-password:
-  'secret'
+id: 'foo@bar.com'
+password: 'secret'

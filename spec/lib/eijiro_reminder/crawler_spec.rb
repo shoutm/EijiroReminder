@@ -3,9 +3,19 @@ require 'spec_helper'
 require 'yaml'
 
 describe 'EijiroReminder::Crawler' do
-  before :each do
+  before :all do
     @config_path = File.join(__dir__, 'crawler_config.yaml')
+    @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
     @config = YAML.load_file @config_path
+    @sample_data = YAML.load_file @sampledata_path
+    @login_url = File.join(@config['base_url'], @config['paths']['login'])
+    @wordbook_ej_url =
+      File.join(@config['base_url'], @config['paths']['wordbook_ej'])
+    FakeWeb.allow_net_connect = !@config['fakeweb_enable']
+  end
+
+  before :each do
+    FakeWeb.clean_registry if @config['fakeweb_enable']
     @crawler = EijiroReminder::Crawler.new(config_path: @config_path)
   end
 
@@ -33,26 +43,43 @@ describe 'EijiroReminder::Crawler' do
   end
 
   it 'return the login url' do
-    expect(@crawler.login_url).to eq \
-      File.join(@config['base_url'], @config['paths']['login'])
+    expect(@crawler.login_url).to eq @login_url
   end
 
   it 'return the word(ej) url' do
-    expect(@crawler.wordbook_ej_url).to eq \
-      File.join(@config['base_url'], @config['paths']['wordbook_ej'])
+    expect(@crawler.wordbook_ej_url).to eq @wordbook_ej_url
   end
 
-  it 'logs in successfully' do
+  describe 'login' do
+    context 'with valid id and password' do
+      it 'logs in successfully and store a cookie' do
+        FakeWeb.register_uri :post, @login_url, \
+          :'Set-Cookie' => @sample_data['cookie'] if @config['fakeweb_enable']
+        @crawler.login
+        expect(@crawler.cookie).to match /eowpuser=/
+        expect(@crawler.cookie).not_to match /domain=/
+        expect(@crawler.cookie).not_to match /path=/
+      end
+    end
 
+    context 'with invalid id and password' do
+      it 'cannot log in and set nil as the cookie parameter' do
+        FakeWeb.register_uri :post, @login_url, \
+          :'Set-Cookie' => nil if @config['fakeweb_enable']
+        @crawler.password += '_edit'
+        @crawler.login
+        expect(@crawler.cookie).to be_nil
+      end
+    end
   end
 
   it 'fetches a page' do
-    dummy_file_path = File.join(__dir__, 'data/eowp_sample.html')
+    dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
     dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
-    url = @config['base_url']
-    FakeWeb.register_uri :get, url, body: dummy_html
+    FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html \
+      if @config['fakeweb_enable']
 
-    html = @crawler.fetch_page(url)
+    html = @crawler.fetch_page(@wordbook_ej_url)
     expect(html).not_to be_nil
   end
 
