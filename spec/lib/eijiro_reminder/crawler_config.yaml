@@ -1,11 +1,7 @@
-base_url: 'http://eowp.alc.co.jp/'
+base_url: 'https://eowp.alc.co.jp/'
 paths:
-  login: 
-    method: 'POST'
-    path: 'login'
-  wordbook_ej: 
-    method: 'GET'
-    path: 'wordbook/ej'
+  login: 'login'
+  wordbook_ej: 'wordbook/ej'
 id:
   'foo@bar.com'
 password:

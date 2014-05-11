@@ -2,20 +2,20 @@
 require 'spec_helper'
 require 'yaml'
 
-describe 'EijiroReminder::Crawler' do 
-  before :each do 
+describe 'EijiroReminder::Crawler' do
+  before :each do
     @config_path = File.join(__dir__, 'crawler_config.yaml')
     @config = YAML.load_file @config_path
     @crawler = EijiroReminder::Crawler.new(config_path: @config_path)
   end
 
   describe 'initialization' do
-    it 'is initialized with a valid config file' do 
+    it 'is initialized with a valid config file' do
       crawler = EijiroReminder::Crawler.new(config_path: @config_path)
       _valid_crawler?(crawler, @config)
     end
 
-    it 'is initialized with valid parameters' do 
+    it 'is initialized with valid parameters' do
       crawler = EijiroReminder::Crawler.new( \
         base_url: @config['base_url'], \
         paths: @config['paths'], \
@@ -32,24 +32,21 @@ describe 'EijiroReminder::Crawler' do
     end
   end
 
-  it 'return the login path and the http method to use' do 
-    expect(@crawler.login_path_and_method).to eq \
-      [ @config['paths']['login']['method'], 
-        File.join(@config['base_url'], @config['paths']['login']['path'])]
+  it 'return the login url' do
+    expect(@crawler.login_url).to eq \
+      File.join(@config['base_url'], @config['paths']['login'])
   end
 
-  it 'return the word(ej) path and the http method to use' do 
-    expect(@crawler.wordbook_ej_path_and_method).to eq \
-      [ @config['paths']['wordbook_ej']['method'], 
-        File.join(@config['base_url'], @config['paths']['wordbook_ej']['path'])]
+  it 'return the word(ej) url' do
+    expect(@crawler.wordbook_ej_url).to eq \
+      File.join(@config['base_url'], @config['paths']['wordbook_ej'])
   end
 
-
-  it 'logs in successfully' do 
+  it 'logs in successfully' do
 
   end
 
-  it 'fetches a page' do 
+  it 'fetches a page' do
     dummy_file_path = File.join(__dir__, 'data/eowp_sample.html')
     dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
     url = @config['base_url']
@@ -59,20 +56,20 @@ describe 'EijiroReminder::Crawler' do
     expect(html).not_to be_nil
   end
 
-  it 'timeouts when a URL cannot be acccessed' do 
+  it 'timeouts when a URL cannot be acccessed' do
   end
 
-  describe 'Parser' do 
-    it 'parses and returns a word' do 
+  describe 'Parser' do
+    it 'parses and returns a word' do
     end
 
-    it 'parses and returns tags related to a word' do 
+    it 'parses and returns tags related to a word' do
     end
 
-    it 'parses and returns a URL' do 
+    it 'parses and returns a URL' do
     end
 
-    it 'returns an error when a parse failed' do 
+    it 'returns an error when a parse failed' do
     end
   end
 

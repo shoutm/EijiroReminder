@@ -35,10 +35,9 @@ module EijiroReminder
     end
 
     def method_missing(method, *args, &block)
-      if method.to_s =~ /(.*)_path_and_method$/
+      if method.to_s =~ /(.*)_url$/
         path_keyword = $1
-        return @paths[path_keyword]['method'], \
-               File.join(@base_url, @paths[path_keyword]['path'])
+        return File.join(@base_url, @paths[path_keyword])
       end
 
       super
