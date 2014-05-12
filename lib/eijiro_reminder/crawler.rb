@@ -37,7 +37,8 @@ module EijiroReminder
     end
 
     def fetch_page(page_url)
-      open(page_url).read
+      login unless @cookie;
+      open(page_url, 'Cookie' => @cookie).read
     rescue
       # TODO add Logging mechanism
       nil
@@ -46,7 +47,8 @@ module EijiroReminder
     def method_missing(method, *args, &block)
       if method.to_s =~ /(.*)_url$/
         path_keyword = $1
-        return File.join(@base_url, @paths[path_keyword])
+        return @paths[path_keyword]['proto'] + \
+          File.join(@base_url, @paths[path_keyword]['path'])
       end
 
       super

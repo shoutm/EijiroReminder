@@ -8,9 +8,10 @@ describe 'EijiroReminder::Crawler' do
     @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
     @config = YAML.load_file @config_path
     @sample_data = YAML.load_file @sampledata_path
-    @login_url = File.join(@config['base_url'], @config['paths']['login'])
-    @wordbook_ej_url =
-      File.join(@config['base_url'], @config['paths']['wordbook_ej'])
+    @login_url = @config['paths']['login']['proto'] + File.join( \
+      @config['base_url'], @config['paths']['login']['path'])
+    @wordbook_ej_url = @config['paths']['wordbook_ej']['proto'] + File.join( \
+      @config['base_url'], @config['paths']['wordbook_ej']['path'])
     FakeWeb.allow_net_connect = !@config['fakeweb_enable']
   end
 
@@ -73,14 +74,25 @@ describe 'EijiroReminder::Crawler' do
     end
   end
 
-  it 'fetches a page' do
-    dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
-    dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
-    FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html \
-      if @config['fakeweb_enable']
-
+  it 'fetches a wordbook(ej) page' do
+    if @config['fakeweb_enable']
+      dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
+      dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
+      FakeWeb.register_uri :post, @login_url,
+        :'Set-Cookie' => @sample_data['cookie']
+      FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html
+    end
     html = @crawler.fetch_page(@wordbook_ej_url)
-    expect(html).not_to be_nil
+
+    # The wordbook(ej) includes:
+    # - <div> which id is 'tabenja' and in which doesn't include any link
+    # - <div> which id is 'tabjaen' and in which includes a link to
+    #   the wordbook (je)
+    doc = Nokogiri::HTML(html)
+    tabenja = doc.css('div#tabenja')
+    expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
+    tabjaen = doc.css('div#tabjaen')
+    expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
   end
 
   it 'timeouts when a URL cannot be acccessed' do
