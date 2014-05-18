@@ -16,8 +16,19 @@ describe 'EijiroReminder::Crawler' do
   end
 
   before :each do
-    FakeWeb.clean_registry if @config['fakeweb_enable']
+    _set_fakeweb if @config['fakeweb_enable']
     @crawler = EijiroReminder::Crawler.new(config_path: @config_path)
+  end
+
+  def _set_fakeweb
+    FakeWeb.clean_registry
+    FakeWeb.register_uri :post, @login_url, \
+      :'Set-Cookie' => @sample_data['cookie']
+    dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
+    dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
+    FakeWeb.register_uri :post, @login_url,
+      :'Set-Cookie' => @sample_data['cookie']
+    FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html
   end
 
   describe 'initialization' do
@@ -54,8 +65,6 @@ describe 'EijiroReminder::Crawler' do
   describe 'login' do
     context 'with valid id and password' do
       it 'logs in successfully and store a cookie' do
-        FakeWeb.register_uri :post, @login_url, \
-          :'Set-Cookie' => @sample_data['cookie'] if @config['fakeweb_enable']
         @crawler.login
         expect(@crawler.cookie).to match /eowpuser=/
         expect(@crawler.cookie).not_to match /domain=/
@@ -75,13 +84,6 @@ describe 'EijiroReminder::Crawler' do
   end
 
   it 'fetches a wordbook(ej) page' do
-    if @config['fakeweb_enable']
-      dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
-      dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
-      FakeWeb.register_uri :post, @login_url,
-        :'Set-Cookie' => @sample_data['cookie']
-      FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html
-    end
     html = @crawler.fetch_page(@wordbook_ej_url)
 
     # The wordbook(ej) includes:
@@ -99,13 +101,14 @@ describe 'EijiroReminder::Crawler' do
   end
 
   describe 'Parser' do
-    it 'parses and returns a word' do
+    it 'parses and returns words and tags related to the words' do
+      html = @crawler.fetch_page(@wordbook_ej_url)
+
+      word_and_tags = @crawler.parser.parse(html)
+      expect(word_and_tags).to eq @sample_data['words']
     end
 
-    it 'parses and returns tags related to a word' do
-    end
-
-    it 'parses and returns a URL' do
+    it 'returns a URL' do
     end
 
     it 'returns an error when a parse failed' do
