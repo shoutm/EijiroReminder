@@ -11,4 +11,4 @@ paths:
     path: 'wordbook/ej'
     proto: 'http'
 id: 'shouta.morimoto@gmail.com'
-password: 'clannad'
+password: 'secret'

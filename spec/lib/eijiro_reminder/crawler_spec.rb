@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'yaml'
 
-describe 'EijiroReminder::Crawler' do
+describe 'Unit tests for EijiroReminder::Crawler' do
   before :all do
     @config_path = File.join(__dir__, 'crawler_config.yaml')
     @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
@@ -100,12 +100,25 @@ describe 'EijiroReminder::Crawler' do
   it 'timeouts when a URL cannot be acccessed' do
   end
 
-  describe 'Parser' do
-    it 'parses and returns words and tags related to the words' do
-      html = @crawler.fetch_page(@wordbook_ej_url)
+  it 'fetches all wordbook(ej) pages' do
+  end
 
-      word_and_tags = @crawler.parser.parse(html)
-      expect(word_and_tags).to eq @sample_data['words']
+  describe 'Parser' do
+    before :each do
+      html = @crawler.fetch_page(@wordbook_ej_url)
+      @parser = EijiroReminder::Crawler::Parser.new(html)
+    end
+
+    it 'parses and returns words and tags related to the words' do
+      words_and_tags = @parser.parse_word_and_tags
+      if @config['fakeweb_enable']
+        expect(words_and_tags).to eq @sample_data['words_and_tags']
+      else
+        words_and_tags.keys.each do |id|
+          expect(words_and_tags[id]['word'].class).to eq String
+          expect(words_and_tags[id]['tags'].class).to eq Array
+        end
+      end
     end
 
     it 'returns a URL' do
@@ -115,4 +128,9 @@ describe 'EijiroReminder::Crawler' do
     end
   end
 
+end
+
+describe 'Integration tests for EijiroReminder::Crawler' do
+  it 'fetches, parses and update database' do
+  end
 end

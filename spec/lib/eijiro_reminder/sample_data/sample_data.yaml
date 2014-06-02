@@ -1,10 +1,14 @@
 cookie: 'eowpuser=4f098317835e025997c1c8698a850c09.0.0.0.0.1.1.0.1.0.1.50.1.1.0.0.Sat_ 24-May-2014 14:59:59 GMT; domain=.eowp.alc.co.jp; path=/'
-words:
-  - word: manhunt
-    tags: [1]
-  - word: fertilize
-    tags: [1]
-  - word: swelling
-    tags: [1]
-  - word: betray
-    tags: ['OK1', 'OK2']
+words_and_tags:
+  '55324':
+    word: manhunt
+    tags: ['1']
+  '27272':
+    word: fertilize
+    tags: ['1']
+  '7654':
+    word: swelling
+    tags: ['1']
+  '10926':
+    word: betray
+    tags: ['OK', 'OK2']

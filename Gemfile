@@ -15,6 +15,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 gem 'nokogiri'
+gem 'sanitize'
 
 group :development do
   gem 'guard-rspec'
