@@ -1,9 +1,9 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+require 'faker'
 
 FactoryGirl.define do
   factory :er_user, :class => 'Er::User' do
-    name "MyString"
-    email "MyString"
-    password "MyString"
+    name      { Faker::Name.name }
+    email     { Faker::Internet.email }
+    password  { Faker::Internet.password }
   end
 end
