@@ -121,9 +121,6 @@ describe 'Unit tests for EijiroReminder::Crawler' do
       end
     end
 
-    it 'returns a URL' do
-    end
-
     it 'returns an error when a parse failed' do
     end
   end
@@ -131,6 +128,15 @@ describe 'Unit tests for EijiroReminder::Crawler' do
 end
 
 describe 'Integration tests for EijiroReminder::Crawler' do
-  it 'fetches, parses and update database' do
+  describe 'fetching a page, parsing and updating database' do
+    context 'with no correspondent entries in DB' do
+      it 'stores entries in DB' do
+      end
+    end
+
+    context 'with an existing entry in DB' do
+      it 'updates entries in DB' do
+      end
+    end
   end
 end
