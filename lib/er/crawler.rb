@@ -4,7 +4,7 @@ require 'nokogiri'
 require 'sanitize'
 require 'net/http'
 
-module EijiroReminder
+module Er
   class Crawler
     attr_accessor :base_url, :paths, :id, :password, :cookie, :parser
 

@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'yaml'
 
-describe 'Unit tests for EijiroReminder::Crawler' do
+describe 'Unit tests for Er::Crawler' do
   before :all do
     @config_path = File.join(__dir__, 'crawler_config.yaml')
     @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
@@ -17,7 +17,7 @@ describe 'Unit tests for EijiroReminder::Crawler' do
 
   before :each do
     _set_fakeweb if @config['fakeweb_enable']
-    @crawler = EijiroReminder::Crawler.new(config_path: @config_path)
+    @crawler = Er::Crawler.new(config_path: @config_path)
   end
 
   def _set_fakeweb
@@ -33,12 +33,12 @@ describe 'Unit tests for EijiroReminder::Crawler' do
 
   describe 'initialization' do
     it 'is initialized with a valid config file' do
-      crawler = EijiroReminder::Crawler.new(config_path: @config_path)
+      crawler = Er::Crawler.new(config_path: @config_path)
       _valid_crawler?(crawler, @config)
     end
 
     it 'is initialized with valid parameters' do
-      crawler = EijiroReminder::Crawler.new( \
+      crawler = Er::Crawler.new( \
         base_url: @config['base_url'], \
         paths: @config['paths'], \
         id: @config['id'], \
@@ -106,7 +106,7 @@ describe 'Unit tests for EijiroReminder::Crawler' do
   describe 'Parser' do
     before :each do
       html = @crawler.fetch_page(@wordbook_ej_url)
-      @parser = EijiroReminder::Crawler::Parser.new(html)
+      @parser = Er::Crawler::Parser.new(html)
     end
 
     it 'parses and returns words and tags related to the words' do
@@ -127,7 +127,7 @@ describe 'Unit tests for EijiroReminder::Crawler' do
 
 end
 
-describe 'Integration tests for EijiroReminder::Crawler' do
+describe 'Integration tests for Er::Crawler' do
   describe 'fetching a page, parsing and updating database' do
     context 'with no correspondent entries in DB' do
       it 'stores entries in DB' do
