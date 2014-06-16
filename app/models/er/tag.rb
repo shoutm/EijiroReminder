@@ -1,5 +1,5 @@
 class Er::Tag < ActiveRecord::Base
-  validate :name,     presence: true
-  validate :tag,      presence: true
-  validate :interval, presence: true
+  validates :name,     presence: true
+  validates :tag,      presence: true
+  validates :interval, presence: true
 end
