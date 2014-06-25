@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :er_items_users_tag, :class => 'Er::ItemsUsersTag' do
-    items_user nil
-    tag nil
+    association :items_user, factory: :er_items_user
+    association :tag, factory: :er_tag
   end
 end

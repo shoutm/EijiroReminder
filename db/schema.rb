@@ -17,15 +17,15 @@ ActiveRecord::Schema.define(version: 20140603064644) do
   enable_extension "plpgsql"
 
   create_table "er_items", force: true do |t|
-    t.integer  "e_id"
-    t.string   "name"
+    t.integer  "e_id",       null: false
+    t.string   "name",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "er_items_users", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "item_id"
+    t.integer  "user_id",    null: false
+    t.integer  "item_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 20140603064644) do
   add_index "er_items_users", ["user_id"], name: "index_er_items_users_on_user_id", using: :btree
 
   create_table "er_items_users_tags", force: true do |t|
-    t.integer  "items_user_id"
-    t.integer  "tag_id"
+    t.integer  "items_user_id", null: false
+    t.integer  "tag_id",        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -52,11 +52,17 @@ ActiveRecord::Schema.define(version: 20140603064644) do
   end
 
   create_table "er_users", force: true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "password"
+    t.string   "name",       null: false
+    t.string   "email",      null: false
+    t.string   "password",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_foreign_key "er_items_users", "er_items", name: "er_items_users_item_id_fk", column: "item_id"
+  add_foreign_key "er_items_users", "er_users", name: "er_items_users_user_id_fk", column: "user_id"
+
+  add_foreign_key "er_items_users_tags", "er_items_users", name: "er_items_users_tags_items_user_id_fk", column: "items_user_id"
+  add_foreign_key "er_items_users_tags", "er_tags", name: "er_items_users_tags_tag_id_fk", column: "tag_id"
 
 end

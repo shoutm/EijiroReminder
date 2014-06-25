@@ -17,6 +17,7 @@ gem 'spring',        group: :development
 
 gem 'nokogiri'
 gem 'sanitize'
+gem 'foreigner'
 
 group :development do
   gem 'guard-rspec'
