@@ -6,35 +6,38 @@ require "#{File.dirname(__FILE__)}/crawler_spec_helper"
 describe 'Unit tests for Er::Crawler' do
   before :all do
     initialize_variables
+    initialize_database
   end
 
   before :each do
     set_fakeweb if @config['fakeweb_enable']
     @crawler = Er::Crawler.new(
-        id: @config['default_user']['id'], \
-        password: @config['default_user']['password'])
+        id: @default_user.email,
+        password: @default_user.password)
   end
 
   describe 'initialization' do
     it 'is initialized with a valid config file' do
       crawler = Er::Crawler.new(config_path: @config_path,
-        id: @config['default_user']['id'], \
-        password: @config['default_user']['password'])
+        id: @default_user.email,
+        password: @default_user.password)
       _valid_crawler?(crawler, @config)
     end
 
     it 'is initialized with default config file' do
+      default_conf_path = Rails.root.join('lib/config/er_crawler_config.yaml')
+      default_config = YAML.load_file default_conf_path
       crawler = Er::Crawler.new(
-        id: @config['default_user']['id'], \
-        password: @config['default_user']['password'])
-      _valid_crawler?(crawler, @config)
+        id: @default_user.email,
+        password: @default_user.password)
+      _valid_crawler?(crawler, default_config)
     end
 
     def _valid_crawler?(crawler, expected)
       expect(crawler.base_url).to eq expected['base_url']
       expect(crawler.paths).to eq expected['paths']
-      expect(crawler.id).to eq expected['default_user']['id']
-      expect(crawler.password).to eq expected['default_user']['password']
+      expect(crawler.id).to eq @default_user.email
+      expect(crawler.password).to eq @default_user.password
     end
   end
 

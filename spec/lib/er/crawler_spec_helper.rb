@@ -30,6 +30,7 @@ def initialize_database
   Er::ItemsUsersTag.delete_all
 
   create(:default_user)
+  @default_user = Er::User.find_by_name('Default User')
 
   create(:'tag-1st')
   create(:'tag-2nd')
