@@ -1,5 +1,8 @@
 # Test environment settings
 fakeweb_enable: true
+default_user:
+  id: 'shouta.morimoto@gmail.com'
+  password: 'secret'
 
 # Eijiro settings
 base_url: '://eowp.alc.co.jp/' # should not include 'http' or 'https'
@@ -10,5 +13,3 @@ paths:
   wordbook_ej:
     path: 'wordbook/ej'
     proto: 'http'
-id: 'shouta.morimoto@gmail.com'
-password: 'secret'

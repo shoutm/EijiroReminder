@@ -1,34 +1,16 @@
 # encoding: UTF-8
 require 'spec_helper'
 require 'yaml'
+require "#{File.dirname(__FILE__)}/crawler_spec_helper"
 
 describe 'Unit tests for Er::Crawler' do
   before :all do
-    @config_path = File.join(__dir__, 'crawler_config.yaml')
-    @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
-    @config = YAML.load_file @config_path
-    @sample_data = YAML.load_file @sampledata_path
-    @login_url = @config['paths']['login']['proto'] + File.join( \
-      @config['base_url'], @config['paths']['login']['path'])
-    @wordbook_ej_url = @config['paths']['wordbook_ej']['proto'] + File.join( \
-      @config['base_url'], @config['paths']['wordbook_ej']['path'])
-    FakeWeb.allow_net_connect = !@config['fakeweb_enable']
+    initialize_variables
   end
 
   before :each do
-    _set_fakeweb if @config['fakeweb_enable']
+    set_fakeweb if @config['fakeweb_enable']
     @crawler = Er::Crawler.new(config_path: @config_path)
-  end
-
-  def _set_fakeweb
-    FakeWeb.clean_registry
-    FakeWeb.register_uri :post, @login_url, \
-      :'Set-Cookie' => @sample_data['cookie']
-    dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
-    dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
-    FakeWeb.register_uri :post, @login_url,
-      :'Set-Cookie' => @sample_data['cookie']
-    FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html
   end
 
   describe 'initialization' do
@@ -41,16 +23,16 @@ describe 'Unit tests for Er::Crawler' do
       crawler = Er::Crawler.new( \
         base_url: @config['base_url'], \
         paths: @config['paths'], \
-        id: @config['id'], \
-        password: @config['password'])
+        id: @config['default_user']['id'], \
+        password: @config['default_user']['password'])
       _valid_crawler?(crawler, @config)
     end
 
     def _valid_crawler?(crawler, expected)
       expect(crawler.base_url).to eq expected['base_url']
       expect(crawler.paths).to eq expected['paths']
-      expect(crawler.id).to eq expected['id']
-      expect(crawler.password).to eq expected['password']
+      expect(crawler.id).to eq expected['default_user']['id']
+      expect(crawler.password).to eq expected['default_user']['password']
     end
   end
 
@@ -128,14 +110,38 @@ describe 'Unit tests for Er::Crawler' do
 end
 
 describe 'Integration tests for Er::Crawler' do
+  before :all do
+    initialize_variables
+    initialize_database
+    set_fakeweb if @config['fakeweb_enable']
+    @crawler = Er::Crawler.new(config_path: @config_path)
+  end
+
   describe 'fetching a page, parsing and updating database' do
     context 'with no correspondent entries in DB' do
-      it 'stores entries in DB' do
+      before(:all) do
+        # No db entries before scraping
+#        @crawler.scrape_and_save(@wordbook_ej_url)
+      end
+
+      it 'stores new entries in er_items table' do
+        @sample_data['words_and_tags'].each_key do |e_id|
+          name = @sample_data['words_and_tags'][e_id]
+#          expect(Er::Item.where(e_id: e_id, name: name).size).to eq(1)
+        end
+      end
+
+      it 'stores new entries in er_items_users table' do
+      end
+
+      it 'stores new entries in er_items_users_tags table' do
       end
     end
 
     context 'with an existing entry in DB' do
       it 'updates entries in DB' do
+        # No db entries before scraping
+#        @crawler.scrape_and_save(@wordbook_ej_url)
       end
     end
   end
