@@ -10,19 +10,21 @@ describe 'Unit tests for Er::Crawler' do
 
   before :each do
     set_fakeweb if @config['fakeweb_enable']
-    @crawler = Er::Crawler.new(config_path: @config_path)
+    @crawler = Er::Crawler.new(
+        id: @config['default_user']['id'], \
+        password: @config['default_user']['password'])
   end
 
   describe 'initialization' do
     it 'is initialized with a valid config file' do
-      crawler = Er::Crawler.new(config_path: @config_path)
+      crawler = Er::Crawler.new(config_path: @config_path,
+        id: @config['default_user']['id'], \
+        password: @config['default_user']['password'])
       _valid_crawler?(crawler, @config)
     end
 
-    it 'is initialized with valid parameters' do
-      crawler = Er::Crawler.new( \
-        base_url: @config['base_url'], \
-        paths: @config['paths'], \
+    it 'is initialized with default config file' do
+      crawler = Er::Crawler.new(
         id: @config['default_user']['id'], \
         password: @config['default_user']['password'])
       _valid_crawler?(crawler, @config)

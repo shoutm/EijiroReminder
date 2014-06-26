@@ -8,20 +8,11 @@ module Er
   class Crawler
     attr_accessor :base_url, :paths, :id, :password, :cookie, :parser
 
-    def initialize(config_path: nil, base_url: nil, paths: nil,
-                   id: nil, password: nil)
-      # TODO Retrieving data from config file should be removed
-      # because id and password can't be specified by config.
-      if config_path
-        config = YAML.load_file config_path
-        base_url = config['base_url']
-        paths = config['paths']
-        id = config['default_user']['id']
-        password = config['default_user']['password']
-      end
-
-      @base_url = base_url
-      @paths = paths
+    def initialize(id: nil, password: nil, config_path: \
+                   Rails.root.join('lib/config/er_crawler_config.yaml'))
+      config = YAML.load_file config_path
+      @base_url = config['base_url']
+      @paths = config['paths']
       @id = id
       @password = password
     end

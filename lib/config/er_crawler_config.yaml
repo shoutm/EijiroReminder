@@ -1,0 +1,9 @@
+# Eijiro settings
+base_url: '://eowp.alc.co.jp/' # should not include 'http' or 'https'
+paths:
+  login:
+    path: 'login'
+    proto: 'https'
+  wordbook_ej:
+    path: 'wordbook/ej'
+    proto: 'http'
