@@ -22,12 +22,7 @@ def set_fakeweb
 end
 
 def initialize_database
-  # TODO There are some ways to clear db elegantly
-  Er::User.delete_all
-  Er::Item.delete_all
-  Er::Tag.delete_all
-  Er::ItemsUser.delete_all
-  Er::ItemsUsersTag.delete_all
+  clean_db
 
   create(:default_user)
   @default_user = Er::User.find_by_name('Default User')
@@ -35,4 +30,13 @@ def initialize_database
   create(:'tag-1st')
   create(:'tag-2nd')
   create(:'tag-3rd')
+end
+
+def clean_db
+  # TODO There are some ways to clear db elegantly
+  Er::ItemsUsersTag.delete_all
+  Er::ItemsUser.delete_all
+  Er::User.delete_all
+  Er::Item.delete_all
+  Er::Tag.delete_all
 end

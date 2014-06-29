@@ -119,34 +119,81 @@ describe 'Integration tests for Er::Crawler' do
     initialize_variables
     initialize_database
     set_fakeweb if @config['fakeweb_enable']
-    @crawler = Er::Crawler.new(config_path: @config_path)
+    @crawler = Er::Crawler.new(
+        id: @default_user.email,
+        password: @default_user.password)
+    set_testdata
+  end
+
+  def set_testdata
+    if @config['fakeweb_enable']
+      @word_and_tags = @sample_data['words_and_tags']
+    else
+      user = Er::User.find_by_email(@default_user.email)
+      html = @crawler.fetch_page(@wordbook_ej_url)
+      parser = Er::Crawler::Parser.new(html)
+      @word_and_tags = parser.parse_word_and_tags
+    end
   end
 
   describe 'fetching a page, parsing and updating database' do
     context 'with no correspondent entries in DB' do
       before(:all) do
         # No db entries before scraping
-#        @crawler.scrape_and_save(@wordbook_ej_url)
+        @crawler.scrape_and_save(@wordbook_ej_url)
       end
 
       it 'stores new entries in er_items table' do
-        @sample_data['words_and_tags'].each_key do |e_id|
-          name = @sample_data['words_and_tags'][e_id]
-#          expect(Er::Item.where(e_id: e_id, name: name).size).to eq(1)
-        end
+        check_er_items
       end
 
       it 'stores new entries in er_items_users table' do
+        check_er_items_users
       end
 
       it 'stores new entries in er_items_users_tags table' do
+        check_er_items_users_tags
       end
     end
 
     context 'with an existing entry in DB' do
+      before(:all) do
+        create(:default_items_users_tag)
+        @crawler.scrape_and_save(@wordbook_ej_url)
+      end
+
       it 'updates entries in DB' do
-        # No db entries before scraping
-#        @crawler.scrape_and_save(@wordbook_ej_url)
+      end
+    end
+  end
+
+  def check_er_items
+    @word_and_tags.each_key do |e_id|
+      word = @word_and_tags[e_id]['word']
+      expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
+    end
+  end
+
+  def check_er_items_users
+    @word_and_tags.each_key do |e_id|
+      item = Er::Item.find_by_e_id(e_id)
+      expect(Er::ItemsUser.where(user_id: @default_user.id,
+                                 item_id: item.id).size).to eq(1)
+    end
+  end
+
+  def check_er_items_users_tags
+    @word_and_tags.each_key do |e_id|
+      tags = @word_and_tags[e_id]['tags']
+      item = Er::Item.find_by_e_id(e_id)
+      items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
+                                         item_id: item.id)
+      tags.each do |tag_name|
+        tag = Er::Tag.find_by_tag(tag_name)
+        if tag
+          expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
+                                         tag_id: tag.id).size).to eq(1)
+        end
       end
     end
   end

@@ -38,6 +38,30 @@ module Er
       nil
     end
 
+    def scrape_and_save(page_url)
+      user = Er::User.find_by_email(@id)
+      html = fetch_page(page_url)
+      parser = Parser.new(html)
+      word_and_tags = parser.parse_word_and_tags
+
+      word_and_tags.each_key do |e_id|
+        word = word_and_tags[e_id]['word']
+        tags = word_and_tags[e_id]['tags']
+        item = Er::Item.new(e_id: e_id, name: word)
+        item.save
+        items_user = Er::ItemsUser.new(user_id: user.id, item_id: item.id)
+        items_user.save
+        tags.each do |tag_name|
+          tag = Er::Tag.find_by_tag(tag_name)
+          if tag
+            items_users_tag = Er::ItemsUsersTag.new(
+              items_user_id: items_user.id, tag_id: tag.id)
+            items_users_tag.save
+          end
+        end
+      end
+    end
+
     def method_missing(method, *args, &block)
       if method.to_s =~ /(.*)_url$/
         path_keyword = $1
