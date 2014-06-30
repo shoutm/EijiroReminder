@@ -44,19 +44,31 @@ module Er
       parser = Parser.new(html)
       word_and_tags = parser.parse_word_and_tags
 
+      _store_parsed_items(user, word_and_tags)
+    end
+
+    private
+
+    def _store_parsed_items(user, word_and_tags)
       word_and_tags.each_key do |e_id|
         word = word_and_tags[e_id]['word']
         tags = word_and_tags[e_id]['tags']
-        item = Er::Item.new(e_id: e_id, name: word)
-        item.save
-        items_user = Er::ItemsUser.new(user_id: user.id, item_id: item.id)
-        items_user.save
+        item_data = {e_id: e_id, name: word}
+        item = Er::Item.find_or_create_by(item_data)
+        item.update_attributes(item_data)
+
+        items_user_data = {user_id: user.id, item_id: item.id}
+        items_user = Er::ItemsUser.find_or_create_by(items_user_data)
+        items_user.update_attributes(items_user_data)
+
         tags.each do |tag_name|
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
-            items_users_tag = Er::ItemsUsersTag.new(
-              items_user_id: items_user.id, tag_id: tag.id)
-            items_users_tag.save
+            items_users_tag_data = {items_user_id: items_user.id,
+                                    tag_id: tag.id}
+            items_users_tag = Er::ItemsUsersTag.find_or_create_by(
+              items_users_tag_data)
+            items_users_tag.update_attributes(items_users_tag_data)
           end
         end
       end
@@ -71,6 +83,8 @@ module Er
 
       super
     end
+
+    public
 
     class Parser
       # --------------------------------------

@@ -162,39 +162,54 @@ describe 'Integration tests for Er::Crawler' do
         @crawler.scrape_and_save(@wordbook_ej_url)
       end
 
-      it 'updates entries in DB' do
+      it 'keeps having an existing entry in er_items table' do
+        check_er_items
+      end
+
+      it 'keeps having an existing entry in er_items_users table' do
+        check_er_items_users
+      end
+
+      it 'keeps having an existing entry in er_items_users_tags table' do
+        check_er_items_users_tags
       end
     end
   end
 
   def check_er_items
-    @word_and_tags.each_key do |e_id|
-      word = @word_and_tags[e_id]['word']
-      expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
-    end
+    expect {
+      @word_and_tags.each_key do |e_id|
+        word = @word_and_tags[e_id]['word']
+        expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
+      end
+    }.not_to raise_error
   end
 
   def check_er_items_users
-    @word_and_tags.each_key do |e_id|
-      item = Er::Item.find_by_e_id(e_id)
-      expect(Er::ItemsUser.where(user_id: @default_user.id,
-                                 item_id: item.id).size).to eq(1)
-    end
+    expect {
+      @word_and_tags.each_key do |e_id|
+        item = Er::Item.find_by_e_id(e_id)
+        expect(Er::ItemsUser.where(user_id: @default_user.id,
+                                   item_id: item.id).size).to eq(1)
+      end
+    }.not_to raise_error
   end
 
   def check_er_items_users_tags
-    @word_and_tags.each_key do |e_id|
-      tags = @word_and_tags[e_id]['tags']
-      item = Er::Item.find_by_e_id(e_id)
-      items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
-                                         item_id: item.id)
-      tags.each do |tag_name|
-        tag = Er::Tag.find_by_tag(tag_name)
-        if tag
-          expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
-                                         tag_id: tag.id).size).to eq(1)
+    expect {
+      @word_and_tags.each_key do |e_id|
+        tags = @word_and_tags[e_id]['tags']
+        item = Er::Item.find_by_e_id(e_id)
+        items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
+                                           item_id: item.id)
+        tags.each do |tag_name|
+          tag = Er::Tag.find_by_tag(tag_name)
+          if tag
+            expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
+                                           tag_id: tag.id).size).to eq(1)
+          end
         end
       end
-    end
+    }.not_to raise_error
   end
 end
