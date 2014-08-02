@@ -26,10 +26,6 @@ def initialize_database
 
   create(:default_user)
   @default_user = Er::User.find_by_name('Default User')
-
-  create(:'tag-1st')
-  create(:'tag-2nd')
-  create(:'tag-3rd')
 end
 
 def clean_db

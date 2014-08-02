@@ -176,6 +176,8 @@ describe 'Integration tests for Er::Crawler' do
     end
   end
 
+  private
+
   def check_er_items
     expect {
       @word_and_tags.each_key do |e_id|

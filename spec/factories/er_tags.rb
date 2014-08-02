@@ -1,25 +1,49 @@
 FactoryGirl.define do
-  factory :'tag-none', :class => 'Er::Tag' do
-    name      "tag-none"
-    tag       'none'
-    interval  '1' # days
+  factory :'1day', :class => 'Er::Tag' do
+    name      "1Day"
+    tag       '1:1day'
+    interval  '3' # days
   end
 
-  factory :'tag-1st', :class => 'Er::Tag' do
-    name      "tag-1st"
-    tag       '1st'
-    interval  '2' # days
+  factory :'3day', :class => 'Er::Tag' do
+    name      "3Days"
+    tag       '2:3days'
+    interval  '7' # days
   end
 
-  factory :'tag-2nd', :class => 'Er::Tag' do
-    name      "tag-2nd"
-    tag       '2nd'
-    interval  '4' # days
+  factory :'1week', :class => 'Er::Tag' do
+    name      "1Week"
+    tag       '3:1week'
+    interval  '14' # days
   end
 
-  factory :'tag-3rd', :class => 'Er::Tag' do
-    name      "tag-3rd"
-    tag       '3rd'
-    interval  '8' # days
+  factory :'2weeks', :class => 'Er::Tag' do
+    name      "2Weeks"
+    tag       '4:2weeks'
+    interval  '31' # days
+  end
+
+  factory :'1month', :class => 'Er::Tag' do
+    name      "1Month"
+    tag       '5:1month'
+    interval  '62' # days
+  end
+
+  factory :'2months', :class => 'Er::Tag' do
+    name      "2Months"
+    tag       '6:2months'
+    interval  '' # days
+  end
+
+  factory :'4months', :class => 'Er::Tag' do
+    name      "4Months"
+    tag       '7:4months'
+    interval  '124' # days
+  end
+
+  factory :'done', :class => 'Er::Tag' do
+    name      "Done"
+    tag       '8:done'
+    interval  '0' # days
   end
 end
