@@ -47,9 +47,12 @@ ActiveRecord::Schema.define(version: 20140603064644) do
     t.string   "name",       null: false
     t.string   "tag",        null: false
     t.integer  "interval",   null: false
+    t.integer  "order",      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "er_tags", ["order"], name: "index_er_tags_on_order", unique: true, using: :btree
 
   create_table "er_users", force: true do |t|
     t.string   "name",       null: false

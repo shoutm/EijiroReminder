@@ -10,6 +10,7 @@ require 'factory_girl'
 Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f }
 
 # Initial values for er_tags table.
+Er::Tag.delete_all
 FactoryGirl.create(:'1day_tag')
 FactoryGirl.create(:'3days_tag')
 FactoryGirl.create(:'1week_tag')
