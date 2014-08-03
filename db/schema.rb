@@ -34,8 +34,9 @@ ActiveRecord::Schema.define(version: 20140603064644) do
   add_index "er_items_users", ["user_id"], name: "index_er_items_users_on_user_id", using: :btree
 
   create_table "er_items_users_tags", force: true do |t|
-    t.integer  "items_user_id", null: false
-    t.integer  "tag_id",        null: false
+    t.integer  "items_user_id",     null: false
+    t.integer  "tag_id",            null: false
+    t.datetime "registration_date", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
