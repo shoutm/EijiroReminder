@@ -24,8 +24,9 @@ ActiveRecord::Schema.define(version: 20140603064644) do
   end
 
   create_table "er_items_users", force: true do |t|
-    t.integer  "user_id",    null: false
-    t.integer  "item_id",    null: false
+    t.integer  "user_id",      null: false
+    t.integer  "item_id",      null: false
+    t.string   "wordbook_url", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

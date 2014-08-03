@@ -44,12 +44,12 @@ module Er
       parser = Parser.new(html)
       word_and_tags = parser.parse_word_and_tags
 
-      _store_parsed_items(user, word_and_tags)
+      _store_parsed_items(user, page_url, word_and_tags)
     end
 
     private
 
-    def _store_parsed_items(user, word_and_tags)
+    def _store_parsed_items(user, page_url, word_and_tags)
       word_and_tags.each_key do |e_id|
         word = word_and_tags[e_id]['word']
         tags = word_and_tags[e_id]['tags']
@@ -57,7 +57,8 @@ module Er
         item = Er::Item.find_or_create_by(item_data)
         item.update_attributes(item_data)
 
-        items_user_data = {user_id: user.id, item_id: item.id}
+        items_user_data = {user_id: user.id, item_id: item.id,
+                           wordbook_url: page_url}
         items_user = Er::ItemsUser.find_or_create_by(items_user_data)
         items_user.update_attributes(items_user_data)
 

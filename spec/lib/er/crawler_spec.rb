@@ -195,7 +195,8 @@ describe 'Integration tests for Er::Crawler' do
       @word_and_tags.each_key do |e_id|
         item = Er::Item.find_by_e_id(e_id)
         expect(Er::ItemsUser.where(user_id: @default_user.id,
-                                   item_id: item.id).size).to eq(1)
+          item_id: item.id,
+          wordbook_url: @wordbook_ej_url).size).to eq(1)
       end
     }.not_to raise_error
   end
@@ -206,7 +207,8 @@ describe 'Integration tests for Er::Crawler' do
         tags = @word_and_tags[e_id]['tags']
         item = Er::Item.find_by_e_id(e_id)
         items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
-                                           item_id: item.id)
+                                           item_id: item.id,
+                                           wordbook_url: @wordbook_ej_url)
         tags.each do |tag_name|
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
