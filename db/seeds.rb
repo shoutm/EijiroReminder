@@ -7,5 +7,14 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 require 'factory_girl'
+Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f }
 
 # Initial values for er_tags table.
+FactoryGirl.create(:'1day_tag')
+FactoryGirl.create(:'3days_tag')
+FactoryGirl.create(:'1week_tag')
+FactoryGirl.create(:'2weeks_tag')
+FactoryGirl.create(:'1month_tag')
+FactoryGirl.create(:'2months_tag')
+FactoryGirl.create(:'4months_tag')
+FactoryGirl.create(:'done_tag')
