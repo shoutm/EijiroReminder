@@ -159,7 +159,10 @@ describe 'Integration tests for Er::Crawler' do
     context 'with an existing entry in DB' do
       before(:all) do
         create(:default_items_users_tag)
+        Timecop.freeze
+        @scraping_time = Time.now
         @crawler.scrape_and_save(@wordbook_ej_url)
+        Timecop.return
       end
 
       it 'keeps having an existing entry in er_items table' do
@@ -208,7 +211,8 @@ describe 'Integration tests for Er::Crawler' do
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
             expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
-                                           tag_id: tag.id).size).to eq(1)
+              tag_id: tag.id,
+              registration_date: @scraping_time).size).to eq(1)
           end
         end
       end

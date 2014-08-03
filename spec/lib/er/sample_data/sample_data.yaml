@@ -2,13 +2,13 @@ cookie: 'eowpuser=4f098317835e025997c1c8698a850c09.0.0.0.0.1.1.0.1.0.1.50.1.1.0.
 words_and_tags:
   '55324':
     word: manhunt
-    tags: ['1st']
+    tags: ['test_tag1']
   '27272':
     word: fertilize
     tags: ['1'] # Invalid tag
   '7654':
     word: swelling
-    tags: ['1st']
+    tags: ['test_tag1']
   '10926':
     word: betray
-    tags: ['1st', '2nd']
+    tags: ['test_tag1', 'test_tag2']
