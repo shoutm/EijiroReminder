@@ -36,12 +36,23 @@ module Er
       nil
     end
 
-    def parse_and_save(page_url, html)
-      user = Er::User.find_by_email(@id)
-      parser = Parser.new(html)
-      word_and_tags = parser.parse_word_and_tags
+    def parse_and_save(url_contents_pair_ary)
+      url_contents_pair_ary.each do |url_contents_pair|
+        user = Er::User.find_by_email(@id)
+        parser = Parser.new(url_contents_pair.page_contents)
+        word_and_tags = parser.parse_word_and_tags
 
-      _store_parsed_items(user, page_url, word_and_tags)
+        _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
+      end
+    end
+
+    class UrlContentsPair
+      attr_accessor :page_url, :page_contents
+
+      def initialize(page_url, page_contents)
+        @page_url = page_url
+        @page_contents = page_contents
+      end
     end
 
     private

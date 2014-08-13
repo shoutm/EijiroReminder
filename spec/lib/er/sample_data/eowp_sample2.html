@@ -1,0 +1,552 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>英和単語帳：英辞郎 on the WEB Pro</title>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" href="/content/css/jquery.resizableColumns.css" />
+<meta http-equiv="Content-Language" content="ja" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+<meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+<meta name="ROBOTS" content="NOARCHIVE" />
+<meta name="keywords" content="英辞郎 on the WEB Pro, オンライン英和辞書, オンライン和英辞書, えいじろう" />
+<meta name="description" content="語学学習のスペースアルク（SPACE ALC）がお届けする進化するオンライン英和・和英辞書の有料版『英辞郎（えいじろう） on the WEB Pro』。「英次郎」、「英二郎」と綴られることもあります。" />
+<meta name="format-detection" content="telephone=no" />
+<!-- ▼ css ▼ -->
+<link href="/content/css/eowp.css?1388135929000" rel="stylesheet" type="text/css" id="eowp_css" />
+<!--[if lte IE 8]><link href="/content/css/layout_ie6.css?1351242742000" rel="stylesheet" type="text/css" /><![endif]-->
+<!-- ▼ eowp common ▼ -->
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_common.js?1379578228000" charset="utf-8"></script>
+<!-- ▼ eowp footer ▼ -->
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_footer.js?1371696311000" charset="utf-8"></script>
+<script type="text/javascript" language="JavaScript">
+<!--
+SHARE_DOMAIN = "eowp.in";
+COOKIE_DOMAIN = ".eowp.alc.co.jp";
+// -->
+</script>
+
+<script type="text/javascript" language="JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="/content/js/store.min.js"></script>
+<script type="text/javascript" language="JavaScript" src="/content/js/jquery.resizableColumns.js"></script>
+<!-- ▼ eowp ▼ -->
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp.js?1390267675000" charset="utf-8"></script>
+<!-- ▼ search logic ▼ -->
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_search.js?1374039420000" charset="UTF-8"></script>
+<!-- ▼ suggest logic ▼ -->
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_suggest.js?1393834912000" charset="UTF-8"></script>
+<!-- ▼ eowp information ▼-->
+<script type="text/javascript" language="JavaScript" src="/content/js/information.js?1404128200000" charset="UTF-8"></script>
+<script type="text/javascript" language="JavaScript">
+<!--
+COOKIE_NAME = "eowpuser";
+SUGGEST_LIMIT_BYTE = 306;
+// -->
+</script>
+
+
+
+
+
+
+
+
+<style type="text/css">
+<!--
+	.kana{
+		display: none;
+	}
+-->
+</style>
+
+<script type="text/javascript" language="JavaScript">
+<!--
+	TEXTOBOX_STATUS = "0";
+	DBLCLICK_STATUS = "1";
+	HREF_STATUS = "1";
+//-->
+</script>
+
+
+
+
+
+
+<script type="text/javascript" language="JavaScript">
+<!--
+var url = "null";
+if (url.indexOf("/chrome") == 0) {
+	window.name = "eowpapp";
+}
+if (!window.name) {
+	window.name = "eowp";
+}
+//-->
+</script>
+
+
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_jq.js?1389774285000" charset="UTF-8"></script>
+<script type="text/javascript" language="JavaScript" src="/content/js/eowp_jq_wordbook_ej.js?1330572794000" charset="UTF-8"></script>
+
+
+
+
+
+
+<script type="text/javascript" language="JavaScript">
+<!--
+	document.onkeydown = function(e) {
+		var shift, ctrl, alt;
+
+		// Mozilla(Firefox, NN) and Opera
+		if (e != null) {
+			keycode = e.which;
+			ctrl = typeof e.modifiers == 'undefined' ? e.ctrlKey : e.modifiers & Event.CONTROL_MASK;
+			alt = typeof e.modifiers == 'undefined' ? e.altKey : e.modifiers & Event.ALT_MASK;
+			shift = typeof e.modifiers == 'undefined' ? e.shiftKey : e.modifiers & Event.SHIFT_MASK;
+			if (shift && alt && (keycode == 37 || keycode == 39)) {
+				// イベントの上位伝播を防止
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		// Internet Explorer
+		} else {
+			keycode = event.keyCode;
+			ctrl = event.ctrlKey;
+			alt = event.altKey;
+			shift = event.shiftKey;
+			if (shift && alt && (keycode == 37 || keycode == 39)) {
+				// イベントの上位伝播を防止
+				event.returnValue = false;
+				event.cancelBubble = true;
+			}
+		}
+
+		// キーコードの文字を取得
+		keychar = String.fromCharCode(keycode).toUpperCase();
+
+		if (shift && alt) {
+			if (keycode == 39) {
+				changePage('next');
+			} else if (keycode == 37) {
+				changePage('back');
+			}
+	  	}
+	};
+	PAGE_CNT = 0;
+//-->
+</script>
+
+
+<script type="text/javascript" language="JavaScript">
+<!--
+window.addEventListener ?
+		window.addEventListener('load', loadForm, false) :
+		window.attachEvent('onload', loadForm);
+PAGE_CNT = 60;
+REF_EX = "exvl";
+//-->
+</script>
+
+
+<script type="text/javascript" language="JavaScript">
+<!--
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1590792-28']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+// -->
+</script>
+
+
+
+<script type="text/javascript" language="JavaScript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" charset="utf-8"></script>
+
+</head>
+<body class="js_ej">
+
+
+		<script type="text/javascript" language="JavaScript">
+		<!--
+			document.write(announce_box);
+		// -->
+		</script>
+
+<script type="text/javascript" language="javascript">
+<!--
+	spmode(WORDBOOK_EJ_URI);
+//-->
+</script>
+<div id="ie6fix" class="wordpage"><div id="wrapper">
+  <a name="top" id="top" target="_blank"></a>
+  <div id="search" class="inner">
+<div style="height: 150px;">
+
+
+
+
+
+
+
+
+
+	<noscript>
+		<div class="noscript">
+			ご利用のブラウザは JavaScript が無効に設定されています。<br />
+			お手数ですが、ブラウザの JavaScript を有効にして再度アクセスしてください。
+		</div>
+	</noscript>
+
+
+				<div id="logo">
+					<div class="logo"><a href="/"><img src="/content/img/logo.gif" alt="英辞郎 on the WEB Pro" title="英辞郎 on the WEB Pro" width="268" height="43" /></a></div>
+					<div class="menu">
+						<div id="toppart">
+							<div id="topuser">こんにちは&nbsp;&nbsp;Morimoto&nbsp;&nbsp;Shotaさん ｜ <a href="/guide/index.html" target="_blank">ご利用ガイド</a> ｜ <a href="/logout">ログアウト</a></div>
+							<div id="topmenu"><a href="/small" onclick="javascript: return openWindow('/small','eowps');"><img src="/content/img/icon_smallmode.gif" alt="小窓モード" title="小窓モード" width="16" height="15" />小窓モード</a>｜
+
+							<a href="/history"><img src="/content/img/icon_history.gif" alt="検索履歴" title="検索履歴" width="15" height="15" />検索履歴</a>｜
+
+							<a href="/wordbook/ej"><img src="/content/img/icon_word.gif" width="14" height="15" alt="単語帳" title="単語帳" />単語帳</a>｜
+							<a href="/setting"><img src="/content/img/icon_setting.gif" width="14" height="15" alt="環境設定" title="環境設定" />環境設定</a></div>
+						</div>
+					</div>
+				</div>
+		<div id="result_search" >
+			<div class="slogan"><div class="edp"><span class="bluetext">データ提供：<a href="http://www.eijiro.jp/" target="_blank">EDP</a></span></div> <span class="redtext">データの転載は禁じられています</span></div>
+			<div><div class="mag"><div id="js_inc"></div></div>
+			<form id="fm1" name="fm1" onsubmit="return goSearch('fm1')">
+				<input type="text" id="q" name="q" class="topsearch_field" autocomplete="off" accesskey="e" maxlength="1000" value="" />
+				<input type="button" name="button" value="英和・和英" class="topsearch_button" onclick="return goSearch('fm1', '','eowp');" />
+				<div class="vague_box">
+					<input type="checkbox" id="fz" name="fz" value="あいまい検索" class="vague_check" /><label></label>
+					<input type="button" name="button" value=" あいまい検索" class="vague_button" onclick="return goSearch('fm1', '','fz');" />
+				</div>
+			</form>
+			<form id="f1" name="f1" method="" action="">
+				<input name="q" type="hidden" value="" />
+				<input name="ie" type="hidden" value="UTF-8" />
+			 	<input name="pg" type="hidden" value="" />
+				<input name="dk" type="hidden" value="" />
+				<input name="fn" type="hidden" value="" />
+				<input name="exp" type="hidden" value="" />
+				<input name="dn" type="hidden" value="" />
+				<input name="ref" type="hidden" value="" />
+				<input name="exdbl" type="hidden" value="" id="exdbl" />
+			</form>
+			</div>
+			<div id="js_open_cond"><a href="">▼条件を詳細に指定して検索</a></div>
+			<div id="searchbutton"><a href="" onclick="return goSearch('fm1', 'eowpkc','kwic');" title="整列"><img src="/content/img/search_button01.gif" width="83" height="22" alt="整列" /></a><a href="" onclick="return goSearch('fm1', 'eowpkc','collocation');" title="頻度集計"><img src="/content/img/search_button02.gif" width="83" height="22" alt="頻度集計" /></a><a href="" onclick="return clearWord('fm1')" title="クリア"><img src="/content/img/search_button03.gif" width="83" height="22" alt="クリア" /></a></div>
+			<div class="clear"></div>
+			<div id="cartoon"><a href="http://www.eijiro.jp/" target="_blank" title="英辞郎データ提供元 EDP のサイトへ"><img src="/content/img/cartoon.gif" alt="英辞郎データ提供元 EDP のサイトへ" width="68" height="79" /></a></div>
+			<div class="clear"></div>
+		</div>
+    </div>
+      <div class="clear"></div>
+			<div id="cond_w" class="margintop0 marginleft20">
+				<div id="main_w">
+					<div class="text">
+					<form id="fmOption1" name="fmOption1" method="post" onsubmit="return goOption1()">
+						<div class="head">条件を詳細に指定して検索</div>
+						<div class="close_w" id="js_close_cond"><a>▲閉じる</a></div>
+						<div class="clear"></div>
+						<p>※複数のキーワードを指定するときはスペース区切りで入力してください</p>
+						<div class="title">すべての語句を含む<a href="/guide/basic.html#2-1" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="textfield"><input type="text" id="q_an" name="q_an" class="option_textfield" value="" autocomplete="off" /></div>
+						<div class="title">フレーズを含む<a href="/guide/basic.html#2-2" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="textfield"><input type="text" id="q_ph" name="q_ph" class="option_textfield" value="" autocomplete="off" /></div>
+						<div class="title">いずれかのキーワードを含む<a href="/guide/basic.html#2-3" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="textfield"><input type="text" id="q_or" name="q_or" class="option_textfield" value="" autocomplete="off" /></div>
+						<div class="title">キーワードを含めない<a href="/guide/basic.html#2-4" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="textfield"><input type="text" id="q_nt" name="q_nt" class="option_textfield" value="" autocomplete="off" /></div>
+						<div class="before_submit"><label for="hk">変化形を含める</label><input type="checkbox" id="hk" name="hk" value="1"  /> <a href="/guide/basic.html#2-5" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="submit_conbutt"><input type="submit" value="この条件で検索" class="cond_button" /></div>
+						<div class="clear"></div>
+					</form>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div id="small_w" style="font-size: 95%;">
+					<div class="text">
+					<form id="fmOption2" name="fmOption2" method="post" onsubmit="return goOption2()">
+						<div class="bold">単語間の語数を指定して検索 <a href="/guide/basic.html#2-6" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div style="margin-top: 10px;margin-bottom:10px;"><input id="q_iw1" name="q_iw1" type="text" class="option_textfield2 marginright5 color999" value="単語１" autocomplete="off" />と<input id="q_iw2" name="q_iw2" type="text" class="option_textfield2 marginleft5 color999" value="単語２" autocomplete="off" />の間に
+							<select id="iw1" name="iw1" class="marginleft5 marginright5">
+								<option value="1" >1</option>
+								<option value="2" >2</option>
+								<option value="3" >3</option>
+								<option value="4" >4</option>
+								<option value="5" >5</option>
+							</select>
+							<select id="iw2" name="iw2" class="marginright5">
+								<option value="0" ></option>
+								<option value="2" >～2</option>
+								<option value="3" >～3</option>
+								<option value="4" >～4</option>
+								<option value="5" >～5</option>
+								<option value="99" >以上</option>
+							</select>
+							語の単語を含む項目を検索
+						</div>
+						<div class="clear"></div>
+						<div class="before_submit"><label for="hk_iw">変化形を含める</label><input type="checkbox" id="hk_iw" name="hk_iw" value="1"  /> <a href="/guide/basic.html#2-5" target="_blank" title="ヘルプを見る" tabindex="-1"><img class="helplink" src="/content/img/question.png" alt="ヘルプを見る" width="11" height="11" /></a></div>
+						<div class="submit_conbutt"><input type="submit" value="単語間の語数を指定して検索" class="cond_button1" /></div>
+						<div class="clear"></div>
+					</form>
+					</div>
+				</div>
+			</div>
+
+
+
+<form id="fmManage" name="fmManage" method="post" action="/wordbook/ej">
+    <div class="clear"></div>
+    <div id="content">
+      <div id="tabselect">
+        <div id="tabenja"><img src="/content/img/word_enja_cur.gif" alt="英和単語帳" title="英和単語帳" width="109" height="31" /></div>
+        <div id="tabjaen"><a href="/wordbook/je" title="和英単語帳"><img src="/content/img/word_jaen_off.gif" alt="和英単語帳" width="109" height="31" /></a></div>
+      </div>
+      <div id="tabcontent">
+        <p>検索結果から記録しておきたい見出し項目を最大5000件まで登録できます。</p>
+        <div id="wordnumber">
+          <div class="paging">現在の単語帳総登録数 ： <span class="bold">1835</span> 件 <a href='javascript:goPage("1")' class='noborder'>◄</a>&nbsp;<a href='javascript:goPage("1")'>1</a>&nbsp;<span class="cur">2</span>&nbsp;<a href='javascript:goPage("3")'>3</a>&nbsp;<a href='javascript:goPage("4")'>4</a>&nbsp;<a href='javascript:goPage("5")'>5</a>&nbsp;<a href='javascript:goPage("6")'>6</a>&nbsp;<a href='javascript:goPage("7")'>7</a>&nbsp;<a href='javascript:goPage("8")'>8</a>&nbsp;<a href='javascript:goPage("9")'>9</a>&nbsp;<a href='javascript:goPage("3")' class='noborder'>►</a></div>
+        </div>
+        <div class="clear"></div>
+        <div id="wordshowall"><a href="/wordbook/ej" class="alpha first cur">すべて表示</a><a href="/wordbook/ej?alpha=A" class="alpha">A</a><a href="/wordbook/ej?alpha=B" class="alpha">B</a><a href="/wordbook/ej?alpha=C" class="alpha">C</a><a href="/wordbook/ej?alpha=D" class="alpha">D</a><a href="/wordbook/ej?alpha=E" class="alpha">E</a><a href="/wordbook/ej?alpha=F" class="alpha">F</a><a href="/wordbook/ej?alpha=G" class="alpha">G</a><a href="/wordbook/ej?alpha=H" class="alpha">H</a><a href="/wordbook/ej?alpha=I" class="alpha">I</a><a href="/wordbook/ej?alpha=J" class="alpha">J</a><a href="/wordbook/ej?alpha=K" class="alpha">K</a><a href="/wordbook/ej?alpha=L" class="alpha">L</a><a href="/wordbook/ej?alpha=M" class="alpha">M</a><a href="/wordbook/ej?alpha=N" class="alpha">N</a><a href="/wordbook/ej?alpha=O" class="alpha">O</a><a href="/wordbook/ej?alpha=P" class="alpha">P</a><a href="/wordbook/ej?alpha=Q" class="alpha">Q</a><a href="/wordbook/ej?alpha=R" class="alpha">R</a><a href="/wordbook/ej?alpha=S" class="alpha">S</a><a href="/wordbook/ej?alpha=T" class="alpha">T</a><a href="/wordbook/ej?alpha=U" class="alpha">U</a><a href="/wordbook/ej?alpha=V" class="alpha">V</a><a href="/wordbook/ej?alpha=W" class="alpha">W</a><div class="alpha">X</div><a href="/wordbook/ej?alpha=Y" class="alpha">Y</a><a href="/wordbook/ej?alpha=Z" class="alpha">Z</a><a href="/wordbook/ej?alpha=0" class="alpha other">その他</a></div>
+        <div class="itembtn">
+          <a id="test" class="word_button"><img src="/content/img/word_test_button.png" alt="選択した項目を復習する" title="選択した項目を復習する" width="177" height="23"></a>
+          <a id="printer" class="word_button"><img src="/content/img/word_print_button.png" alt="選択した項目を印刷する" title="選択した項目を印刷する" width="177" height="23"></a>
+        </div>
+        <div class="lefttable"><table width="100%" border="0" cellspacing="0" cellpadding="0" data-resizable-columns-id="table-wordbk">
+  <tbody>
+  <tr>
+    <th align="center" class="col01" scope="col" data-resizable-column-id="check" data-noresize><input type="checkbox" id="word_chk_all" class="word_check" checked="checked" title="すべてを選択／解除" /></th>
+    <th align="center" class="col02" scope="col" data-resizable-column-id="word" data-disable><a href="/wordbook/ej?col=1&sort=1" title="見出し項目順に並べ替える">見出し項目</a></th>
+    <th align="center" class="col04" scope="col" data-resizable-column-id="desc" data-fix>&nbsp;</th>
+    <th align="center" class="col07" scope="col" data-resizable-column-id="memo">メモ</th>
+    <th align="center" class="col03" scope="col" data-resizable-column-id="date"><a href="/wordbook/ej?col=2&sort=1" title="登録日時順に並べ替える">登録日時▽</a></th>
+    <th align="center" class="col05" scope="col" data-resizable-column-id="tag">タグ</th>
+    <th align="center" class="col06" scope="col" data-resizable-column-id="delete" data-noresize>削除</th>
+  </tr>
+<!-- ▼ 単語帳リスト ▼ -->
+
+  <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+    <td align="center" class="nopadding"><input type="checkbox" class="word_chk" id="word_chk_22886" checked="checked" /></td>
+    <td class="direction_word nopadding toggler"><a id="word_text_22886" title="クリックして意味を表示／非表示">bridesmaid</a></td>
+    <td class="open_close_arrow toggler"><img src="/content/img/open_desc.gif" alt="訳の表示／非表示" title="クリックして意味を表示／非表示" /></td>
+    <td><a id="open_memo_22886" class="open_memo"><img src="/content/img/icon_memo.gif" /></a><div class="word_memo" id="word_memo_22886"></div></td>
+    <td><span class="date">2014/08/05 22:51:48</span></td>
+<!-- ▼ 単語帳付与タグ ▼ -->
+    <td id="js_bkid_22886"><div class="spacing"><a class="js_tag_assign" style="display:inline"><img src="/content/img/word_plusmark.gif" alt="タグを追加します" title="タグを追加します" width="9" height="10" /></a></div><div class="mag"><div class="tooltip_tag"></div></div>
+
+      <span class="tag"><a id="js_id_22886_1" class="js_tag_unset"><img src="/content/img/word_xmark.gif" alt="このタグを解除します" title="このタグを解除します" width="11" height="11" /></a>test_tag1</span>
+    </td>
+    <td class="col06"><a id="word_22886" class="del_word"><img src="/content/img/word_xmark.gif" alt="この見出し項目を削除します" title="この見出し項目を削除します" width="11" height="11" /></a></td>
+<!-- ▲ 単語帳付与タグ ▲ -->
+  </tr>
+<!-- ▼ 定義部 ▼ -->
+  <tr style="display:none">
+    <td></td>
+    <td colspan="6" class="open_desc">
+      <div class="desc" style="padding: 1px;" id="word_desc_22886">
+
+      <div><span class="wordclass">【名】</span><ol>花嫁<span class="kana">｛はなよめ｝</span>介添人<span class="kana">｛かいぞえ にん｝</span>［付添人<span class="kana">｛つきそい にん｝</span>］</ol><span class="attr"><span class="label">【＠】</span>ブライズメイド、<span class="label">【変化】</span>《複》bridesmaids、<span class="label">【分節】</span>brides・maid</span></div>
+
+      </div>
+    </td>
+  </tr>
+<!-- ▲ 定義部 ▲ -->
+
+  <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+    <td align="center" class="nopadding"><input type="checkbox" class="word_chk" id="word_chk_131851" checked="checked" /></td>
+    <td class="direction_word nopadding toggler"><a id="word_text_131851" title="クリックして意味を表示／非表示">strip joint</a></td>
+    <td class="open_close_arrow toggler"><img src="/content/img/open_desc.gif" alt="訳の表示／非表示" title="クリックして意味を表示／非表示" /></td>
+    <td><a id="open_memo_131851" class="open_memo"><img src="/content/img/icon_memo.gif" /></a><div class="word_memo" id="word_memo_131851"></div></td>
+    <td><span class="date">2014/08/05 07:45:48</span></td>
+<!-- ▼ 単語帳付与タグ ▼ -->
+    <td id="js_bkid_131851"><div class="spacing"><a class="js_tag_assign" style="display:inline"><img src="/content/img/word_plusmark.gif" alt="タグを追加します" title="タグを追加します" width="9" height="10" /></a></div><div class="mag"><div class="tooltip_tag"></div></div>
+
+    </td>
+    <td class="col06"><a id="word_131851" class="del_word"><img src="/content/img/word_xmark.gif" alt="この見出し項目を削除します" title="この見出し項目を削除します" width="11" height="11" /></a></td>
+<!-- ▲ 単語帳付与タグ ▲ -->
+  </tr>
+<!-- ▼ 定義部 ▼ -->
+  <tr style="display:none">
+    <td></td>
+    <td colspan="6" class="open_desc">
+      <div class="desc" style="padding: 1px;" id="word_desc_131851">
+
+      <div>ストリップ劇場<span class="kana">｛げきじょう｝</span></div>
+
+      </div>
+    </td>
+  </tr>
+<!-- ▲ 定義部 ▲ -->
+
+  <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+    <td align="center" class="nopadding"><input type="checkbox" class="word_chk" id="word_chk_16070" checked="checked" /></td>
+    <td class="direction_word nopadding toggler"><a id="word_text_16070" title="クリックして意味を表示／非表示">fixate</a></td>
+    <td class="open_close_arrow toggler"><img src="/content/img/open_desc.gif" alt="訳の表示／非表示" title="クリックして意味を表示／非表示" /></td>
+    <td><a id="open_memo_16070" class="open_memo"><img src="/content/img/icon_memo.gif" /></a><div class="word_memo" id="word_memo_16070"></div></td>
+    <td><span class="date">2014/08/05 07:40:23</span></td>
+<!-- ▼ 単語帳付与タグ ▼ -->
+    <td id="js_bkid_16070"><div class="spacing"><a class="js_tag_assign" style="display:inline"><img src="/content/img/word_plusmark.gif" alt="タグを追加します" title="タグを追加します" width="9" height="10" /></a></div><div class="mag"><div class="tooltip_tag"></div></div>
+
+    </td>
+    <td class="col06"><a id="word_16070" class="del_word"><img src="/content/img/word_xmark.gif" alt="この見出し項目を削除します" title="この見出し項目を削除します" width="11" height="11" /></a></td>
+<!-- ▲ 単語帳付与タグ ▲ -->
+  </tr>
+<!-- ▼ 定義部 ▼ -->
+  <tr style="display:none">
+    <td></td>
+    <td colspan="6" class="open_desc">
+      <div class="desc" style="padding: 1px;" id="word_desc_16070">
+
+      <div><span class="wordclass">【自動】</span><ol><li>動かなくなる、定着<span class="kana">｛ていちゃく｝</span>する、くっつく<br />・Minerals fixate to the tooth's surface providing bacteria with a place to adhere to. : ミネラルが歯の表面に付き、バクテリアが付着する場所を提供する。</li><li>こだわる、固執<span class="kana">｛こしゅう｝</span>する<br />・Greg kept fixating on his stepmother's past. : グレッグは継母の過去にこだわり続けた。</li><li>じっと見る、凝視<span class="kana">｛ぎょうし｝</span>する<br />・Pilots spend a majority of their time fixating on the instrument pane. : パイロットは大部分の時間を、計器板を見詰めて過ごす。</li><li>《心理学》固着<span class="kana">｛こちゃく｝</span>する</li></ol><span class="wordclass">【他動】</span><ol><li>～を動かなくする、～を固定<span class="kana">｛こてい｝</span>する、～を安定<span class="kana">｛あんてい｝</span>させる<br />・These screws fixate the box to the panel. : これらのねじでその箱をパネルに固定します。</li><li>～をじっと見る、～を凝視<span class="kana">｛ぎょうし｝</span>する<br />・Fixate the red circle in the center of the diagram. : 図の中心にある赤い丸をじっと見てください。</li><li>（人）の注意<span class="kana">｛ちゅうい｝</span>を～だけに向けさせる、（人）を固執<span class="kana">｛こしゅう｝</span>させる◆<span class="label">【用法】</span>通例受け身で「固執する」と自動詞的に用いる。<br />・I got fixated on one question and didn't have time to answer the others. : 一つの設問に気を取られて、他の設問を解く時間がなかった。</li><li>《心理学》（人）を固着<span class="kana">｛こちゃく｝</span>させる、（人）のリビドーを退行<span class="kana">｛たいこう｝</span>させる</li></ol><span class="attr"><span class="label">【発音】</span><span class="pron">fíkseit、</span><span class="label">【分節】</span>fix・ate</span></div>
+
+      </div>
+    </td>
+  </tr>
+<!-- ▲ 定義部 ▲ -->
+
+  <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+    <td align="center" class="nopadding"><input type="checkbox" class="word_chk" id="word_chk_18121" checked="checked" /></td>
+    <td class="direction_word nopadding toggler"><a id="word_text_18121" title="クリックして意味を表示／非表示">murky</a></td>
+    <td class="open_close_arrow toggler"><img src="/content/img/open_desc.gif" alt="訳の表示／非表示" title="クリックして意味を表示／非表示" /></td>
+    <td><a id="open_memo_18121" class="open_memo"><img src="/content/img/icon_memo.gif" /></a><div class="word_memo" id="word_memo_18121"></div></td>
+    <td><span class="date">2014/08/05 07:36:25</span></td>
+<!-- ▼ 単語帳付与タグ ▼ -->
+    <td id="js_bkid_18121"><div class="spacing"><a class="js_tag_assign" style="display:inline"><img src="/content/img/word_plusmark.gif" alt="タグを追加します" title="タグを追加します" width="9" height="10" /></a></div><div class="mag"><div class="tooltip_tag"></div></div>
+      <span class="tag"><a id="js_id_18121_1" class="js_tag_unset"><img src="/content/img/word_xmark.gif" alt="このタグを解除します" title="このタグを解除します" width="11" height="11" /></a>test_tag1</span>
+      <span class="tag"><a id="js_id_18121_2" class="js_tag_unset"><img src="/content/img/word_xmark.gif" alt="このタグを解除します" title="このタグを解除します" width="11" height="11" /></a>test_tagdone</span>
+
+    </td>
+    <td class="col06"><a id="word_18121" class="del_word"><img src="/content/img/word_xmark.gif" alt="この見出し項目を削除します" title="この見出し項目を削除します" width="11" height="11" /></a></td>
+<!-- ▲ 単語帳付与タグ ▲ -->
+  </tr>
+<!-- ▼ 定義部 ▼ -->
+  <tr style="display:none">
+    <td></td>
+    <td colspan="6" class="open_desc">
+      <div class="desc" style="padding: 1px;" id="word_desc_18121">
+
+      <div><span class="wordclass">【形】</span><ol><li>暗い、〔暗くて前方を〕見通せない</li><li>〔霧や煙などが〕立ち込めた</li><li>〔汚れやおりなどで〕濁った、淀んだ</li><li>〔表現などが〕曖昧<span class="kana">｛あいまい｝</span>な、はっきりしない</li><li>ごまかした、不正<span class="kana">｛ふせい｝</span>な、うさんくさい</li></ol><span class="attr"><span class="label">【音声を聞く】</span><span class="sound" style="display:none">svl11/murky_w.mp3</span><span class="label">【レベル】</span>11、<span class="label">【発音】</span><span class="pron">mə́ː<span class="proni">r</span>ki、</span><span class="label">【変化】</span>《形》murkier ｜ murkiest、<span class="label">【分節】</span>murk・y</span></div>
+
+      </div>
+    </td>
+  </tr>
+<!-- ▲ 定義部 ▲ -->
+<!-- ▲ 単語帳リスト ▲ -->
+</tbody></table>
+</div>
+        <div class="right">
+          <div class="righttable">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <col id="tag_main"/>
+            <col id="tag_del"/>
+            <tr>
+              <th colspan="2" scope="col">単語をタグで管理する</th>
+            </tr>
+            <tr>
+              <td colspan="2" class="greylighttexl small">新しいタグを追加</td>
+            </tr>
+            <tr>
+              <td colspan="2"><input type="text" id="tag_add" name="textfield" class="addtagfield js_tag_field" /><a id="js_tag_add" class="inline"><img src="/content/img/word_addtag_button.gif" alt="追加" title="追加" width="35" height="18" /></a></td>
+            </tr>
+<!-- ▼ タグリスト ▼ -->
+            <tr id="js_tag_list_begin" class="grey">
+              <td><span class="marginleft20"><a href="/wordbook/ej?tag=0" title="タグなし">タグなし</a></span></td>
+              <td align="right" class="col_r">&nbsp;</td>
+            </tr>
+
+            <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+              <td><div><a id="js_tagid_11" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_11" class="js_tagtxt_list" href="/wordbook/ej?tag=11">2:3day</a></div></td>
+              <td align="right"><a href="" id="tag_11" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+              <td><div><a id="js_tagid_10" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_10" class="js_tagtxt_list" href="/wordbook/ej?tag=10">1:1day</a></div></td>
+              <td align="right"><a href="" id="tag_10" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+              <td><div><a id="js_tagid_8" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_8" class="js_tagtxt_list" href="/wordbook/ej?tag=8">OK3</a></div></td>
+              <td align="right"><a href="" id="tag_8" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+              <td><div><a id="js_tagid_7" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_7" class="js_tagtxt_list" href="/wordbook/ej?tag=7">OK2</a></div></td>
+              <td align="right"><a href="" id="tag_7" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+              <td><div><a id="js_tagid_6" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_6" class="js_tagtxt_list" href="/wordbook/ej?tag=6">OK</a></div></td>
+              <td align="right"><a href="" id="tag_6" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+              <td><div><a id="js_tagid_5" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_5" class="js_tagtxt_list" href="/wordbook/ej?tag=5">5</a></div></td>
+              <td align="right"><a href="" id="tag_5" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+              <td><div><a id="js_tagid_4" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_4" class="js_tagtxt_list" href="/wordbook/ej?tag=4">4</a></div></td>
+              <td align="right"><a href="" id="tag_4" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+              <td><div><a id="js_tagid_3" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_3" class="js_tagtxt_list" href="/wordbook/ej?tag=3">3</a></div></td>
+              <td align="right"><a href="" id="tag_3" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="off" onmouseover="this.className='on'" onmouseout="this.className='off'">
+              <td><div><a id="js_tagid_2" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_2" class="js_tagtxt_list" href="/wordbook/ej?tag=2">2</a></div></td>
+              <td align="right"><a href="" id="tag_2" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+            <tr class="grey" onmouseover="this.className='on'" onmouseout="this.className='grey'">
+              <td><div><a id="js_tagid_1" class="js_tag_list"><img src="/content/img/word_tagmark.gif" alt="ドラッグできます" title="ドラッグできます" width="15" height="15"  /></a><a id="js_tagtxt_1" class="js_tagtxt_list" href="/wordbook/ej?tag=1">1</a></div></td>
+              <td align="right"><a href="" id="tag_1" class="del_tag"><img src="/content/img/word_xmark.gif" alt="このタグを削除します" title="このタグを削除します" width="11" height="11" /></a></td>
+            </tr>
+
+<!-- ▲ タグリスト ▲ -->
+          </table>
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="totop"><a href="#top">▲ページトップへ</a></div>
+<input name="fnc" type="hidden" value="" id="fnc" />
+<input name="wordBkId" type="hidden" value="" id="wordBkId" />
+<input name="tagId" type="hidden" value="" id="tagId" />
+<input name="tag" type="hidden" value="" />
+<input name="alpha" type="hidden" value="" />
+<input name="page" type="hidden" value="2" />
+<input name="col" type="hidden" value="2" />
+<input name="sort" type="hidden" value="2" />
+</form>
+
+  </div>
+</div>
+
+
+		<script type="text/javascript" language="JavaScript">
+		<!--
+			footer();
+		// -->
+		</script>
+
+
+</div>
+<div id="word_dialog" title="意味・訳">
+  <div id="word_dialog_contents"></div>
+</div>
+</body>
+</html>

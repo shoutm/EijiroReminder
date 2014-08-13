@@ -120,7 +120,8 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
       before(:all) do
         # No db entries before scraping
         html = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save(@wordbook_ej_url, html)
+        uc_pair = Er::Crawler::UrlContentsPair.new(@wordbook_ej_url, html)
+        @crawler.parse_and_save([uc_pair])
       end
 
       it 'stores new entries in er_items table' do
@@ -142,7 +143,8 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
         Timecop.freeze
         @scraping_time = Time.now
         html = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save(@wordbook_ej_url, html)
+        uc_pair = Er::Crawler::UrlContentsPair.new(@wordbook_ej_url, html)
+        @crawler.parse_and_save([uc_pair])
         Timecop.return
       end
 
