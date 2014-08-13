@@ -1,14 +1,32 @@
 cookie: 'eowpuser=4f098317835e025997c1c8698a850c09.0.0.0.0.1.1.0.1.0.1.50.1.1.0.0.Sat_ 24-May-2014 14:59:59 GMT; domain=.eowp.alc.co.jp; path=/'
-words_and_tags:
-  '55324':
-    word: manhunt
-    tags: ['test_tag1']
-  '27272':
-    word: fertilize
-    tags: ['1'] # Invalid tag
-  '7654':
-    word: swelling
-    tags: ['test_tag1']
-  '10926':
-    word: betray
-    tags: ['test_tag1', 'test_tag2']
+wordbook_pages:
+  '1': # Page number
+    file_path: 'sample_data/eowp_sample.html'
+    words_and_tags:
+      '55324':
+        word: manhunt
+        tags: ['test_tag1']
+      '27272':
+        word: fertilize
+        tags: ['1'] # Invalid tag
+      '7654':
+        word: swelling
+        tags: ['test_tag1']
+      '10926':
+        word: betray
+        tags: ['test_tag1', 'test_tag2']
+  '2': # Page number
+    file_path: 'sample_data/eowp_sample2.html'
+    words_and_tags:
+      '22886':
+        word: bridesmaid
+        tags: ['test_tag1']
+      '131851':
+        word: 'strip joint'
+        tags: []
+      '16070':
+        word: fixate
+        tags: []
+      '18121':
+        word: murky
+        tags: ['test_tag1', 'test_tagdone']

@@ -54,7 +54,7 @@ FactoryGirl.define do
   factory :'done_tag', :class => 'Er::Tag' do
     name      "Done"
     tag       '8:done'
-    interval  '0' # days
+    interval  '-1' # days
     order     '8'
   end
 
@@ -73,5 +73,12 @@ FactoryGirl.define do
     tag       'test_tag2'
     interval  '2' # days
     order     '11'
+  end
+
+  factory :'test_tagdone', :class => 'Er::Tag' do
+    name      "Test_tagdone"
+    tag       'test_tagdone'
+    interval  '-1' # days
+    order     '12'
   end
 end

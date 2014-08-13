@@ -94,12 +94,14 @@ describe 'Unit tests for Er::Crawler' do
     before :each do
       html = @crawler.fetch_page(@wordbook_ej_url)
       @parser = Er::Crawler::Parser.new(html)
+      @expected_words_and_tags =
+        @sample_data['wordbook_pages']['1']['words_and_tags']
     end
 
     it 'parses and returns words and tags related to the words' do
       words_and_tags = @parser.parse_word_and_tags
       if @config['fakeweb_enable']
-        expect(words_and_tags).to eq @sample_data['words_and_tags']
+        expect(words_and_tags).to eq @expected_words_and_tags
       else
         words_and_tags.keys.each do |id|
           expect(words_and_tags[id]['word'].class).to eq String
@@ -127,12 +129,13 @@ describe 'Integration tests for Er::Crawler' do
 
   def set_testdata
     if @config['fakeweb_enable']
-      @word_and_tags = @sample_data['words_and_tags']
+      @expected_words_and_tags =
+        @sample_data['wordbook_pages']['1']['words_and_tags']
     else
       user = Er::User.find_by_email(@default_user.email)
       html = @crawler.fetch_page(@wordbook_ej_url)
       parser = Er::Crawler::Parser.new(html)
-      @word_and_tags = parser.parse_word_and_tags
+      @expected_words_and_tags = parser.parse_word_and_tags
     end
   end
 
@@ -183,8 +186,8 @@ describe 'Integration tests for Er::Crawler' do
 
   def check_er_items
     expect {
-      @word_and_tags.each_key do |e_id|
-        word = @word_and_tags[e_id]['word']
+      @expected_words_and_tags.each_key do |e_id|
+        word = @expected_words_and_tags[e_id]['word']
         expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
       end
     }.not_to raise_error
@@ -192,7 +195,7 @@ describe 'Integration tests for Er::Crawler' do
 
   def check_er_items_users
     expect {
-      @word_and_tags.each_key do |e_id|
+      @expected_words_and_tags.each_key do |e_id|
         item = Er::Item.find_by_e_id(e_id)
         expect(Er::ItemsUser.where(user_id: @default_user.id,
           item_id: item.id,
@@ -203,8 +206,8 @@ describe 'Integration tests for Er::Crawler' do
 
   def check_er_items_users_tags
     expect {
-      @word_and_tags.each_key do |e_id|
-        tags = @word_and_tags[e_id]['tags']
+      @expected_words_and_tags.each_key do |e_id|
+        tags = @expected_words_and_tags[e_id]['tags']
         item = Er::Item.find_by_e_id(e_id)
         items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
                                            item_id: item.id,

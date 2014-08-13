@@ -12,13 +12,20 @@ end
 
 def set_fakeweb
   FakeWeb.clean_registry
-  FakeWeb.register_uri :post, @login_url, \
-    :'Set-Cookie' => @sample_data['cookie']
-  dummy_file_path = File.join(__dir__, 'sample_data/eowp_sample.html')
-  dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
   FakeWeb.register_uri :post, @login_url,
     :'Set-Cookie' => @sample_data['cookie']
-  FakeWeb.register_uri :get, @wordbook_ej_url, body: dummy_html
+  @sample_data['wordbook_pages'].keys.each do |page_num_str|
+    dummy_file_path = File.join(__dir__,
+      @sample_data['wordbook_pages'][page_num_str]['file_path'])
+    dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
+    url = @wordbook_ej_url + '?page=' + page_num_str
+    FakeWeb.register_uri :get, url, body: dummy_html
+    # Default page registration
+    if page_num_str == '1'
+      url = @wordbook_ej_url
+      FakeWeb.register_uri :get, url, body: dummy_html
+    end
+  end
 end
 
 def initialize_database
