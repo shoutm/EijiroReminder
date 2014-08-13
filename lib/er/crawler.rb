@@ -28,14 +28,16 @@ module Er
     def fetch_pages(page_url_ary)
       page_contents = []
       page_url_ary.each do |page_url|
-        page_contents.push fetch_page(page_url)
+        url_contents_pair = fetch_page(page_url)
+        page_contents.push url_contents_pair
       end
       return page_contents
     end
 
     def fetch_page(page_url)
-      login unless @cookie;
-      open(page_url, 'Cookie' => @cookie).read
+      login unless @cookie
+      contents = open(page_url, 'Cookie' => @cookie).read
+      UrlContentsPair.new(page_url, contents)
     rescue
       # TODO add Logging mechanism
       nil

@@ -71,13 +71,13 @@ describe 'Unit tests for Er::Crawler' do
   end
 
   it 'fetches a wordbook(ej) page' do
-    html = @crawler.fetch_page(@wordbook_ej_url)
+    url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
 
     # The wordbook(ej) includes:
     # - <div> which id is 'tabenja' and in which doesn't include any link
     # - <div> which id is 'tabjaen' and in which includes a link to
     #   the wordbook (je)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML(url_contents_pair.page_contents)
     _fetch_successful?(doc)
   end
 
@@ -92,9 +92,9 @@ describe 'Unit tests for Er::Crawler' do
       expected_contents.push \
         @sample_data['wordbook_pages'][page_num]['words_and_tags']
     end
-    contents = @crawler.fetch_pages(urls)
-    contents.each do |html|
-      _fetch_successful?(Nokogiri::HTML(html))
+    page_contents_pair_ary = @crawler.fetch_pages(urls)
+    page_contents_pair_ary.each do |url_contents_pair|
+      _fetch_successful?(Nokogiri::HTML(url_contents_pair.page_contents))
     end
   end
 
@@ -125,8 +125,8 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
         @sample_data['wordbook_pages']['1']['words_and_tags']
     else
       user = Er::User.find_by_email(@default_user.email)
-      html = @crawler.fetch_page(@wordbook_ej_url)
-      parser = Er::Parser.new(html)
+      url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
+      parser = Er::Parser.new(url_contents_pair.page_contents)
       @expected_words_and_tags = parser.parse_word_and_tags
     end
   end
@@ -135,9 +135,8 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
     context 'with no correspondent entries in DB' do
       before(:all) do
         # No db entries before scraping
-        html = @crawler.fetch_page(@wordbook_ej_url)
-        uc_pair = Er::Crawler::UrlContentsPair.new(@wordbook_ej_url, html)
-        @crawler.parse_and_save([uc_pair])
+        url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
+        @crawler.parse_and_save([url_contents_pair])
       end
 
       it 'stores new entries in er_items table' do
@@ -158,9 +157,8 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
         create(:default_items_users_tag)
         Timecop.freeze
         @scraping_time = Time.now
-        html = @crawler.fetch_page(@wordbook_ej_url)
-        uc_pair = Er::Crawler::UrlContentsPair.new(@wordbook_ej_url, html)
-        @crawler.parse_and_save([uc_pair])
+        url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
+        @crawler.parse_and_save([url_contents_pair])
         Timecop.return
       end
 

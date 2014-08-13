@@ -18,8 +18,8 @@ describe 'Unit tests for Er::Crawler' do
 
   describe 'Parser' do
     before :each do
-      html = @crawler.fetch_page(@wordbook_ej_url)
-      @parser = Er::Parser.new(html)
+      url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
+      @parser = Er::Parser.new(url_contents_pair.page_contents)
       @expected_words_and_tags =
         @sample_data['wordbook_pages']['1']['words_and_tags']
     end
