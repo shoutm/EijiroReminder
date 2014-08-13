@@ -18,7 +18,7 @@ def set_fakeweb
     dummy_file_path = File.join(__dir__,
       @sample_data['wordbook_pages'][page_num_str]['file_path'])
     dummy_html = File.open(dummy_file_path, 'r:UTF-8').read
-    url = @wordbook_ej_url + '?page=' + page_num_str
+    url = wordbook_url_with_page_index(page_num_str)
     FakeWeb.register_uri :get, url, body: dummy_html
     # Default page registration
     if page_num_str == '1'
@@ -26,6 +26,10 @@ def set_fakeweb
       FakeWeb.register_uri :get, url, body: dummy_html
     end
   end
+end
+
+def wordbook_url_with_page_index(index_str)
+  @wordbook_ej_url + '?page=' + index_str
 end
 
 def initialize_database

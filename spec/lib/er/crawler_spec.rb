@@ -78,17 +78,33 @@ describe 'Unit tests for Er::Crawler' do
     # - <div> which id is 'tabjaen' and in which includes a link to
     #   the wordbook (je)
     doc = Nokogiri::HTML(html)
-    tabenja = doc.css('div#tabenja')
-    expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
-    tabjaen = doc.css('div#tabjaen')
-    expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
+    _fetch_successful?(doc)
   end
 
   it 'timeouts when a URL cannot be acccessed' do
   end
 
   it 'fetches all wordbook(ej) pages' do
+    urls = []
+    expected_contents = []
+    @sample_data['wordbook_pages'].keys.each do |page_num|
+      urls.push wordbook_url_with_page_index(page_num)
+      expected_contents.push \
+        @sample_data['wordbook_pages'][page_num]['words_and_tags']
+    end
+    contents = @crawler.fetch_pages(urls)
+    contents.each do |html|
+      _fetch_successful?(Nokogiri::HTML(html))
+    end
+  end
 
+  private
+
+  def _fetch_successful?(nokogiri_html)
+    tabenja = nokogiri_html.css('div#tabenja')
+    expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
+    tabjaen = nokogiri_html.css('div#tabjaen')
+    expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
   end
 end
 
