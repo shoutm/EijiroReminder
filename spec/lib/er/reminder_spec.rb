@@ -26,28 +26,56 @@ describe 'Unit tests for Er::Reminder' do
           # Create a user and an item which doesn't have any tags.
           items_user = create(:er_items_user)
           picked_items = @reminder.pick_items_from_db(items_user.user_id)
-          expect(picked_items).to eq [items_user.item_id]
+          expect(picked_items).to eq [items_user.item]
         end
       end
 
       context 'with an item having a tag' do
+        before :each do
+          @tag_info = create(:er_items_users_tag)
+          @tag  = @tag_info.tag
+          @user = @tag_info.items_user.user
+          @item = @tag_info.items_user.item
+        end
+
         context 'before the interval date which is related to the tag' do
           it "doesn't pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+                                 v_current_time: @tag_info.registration_date)
           end
         end
 
         context 'on the day which is just after the interval days' do
           it "pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info.registration_date + @tag.interval,
+              expected_items: [@item])
           end
         end
 
         context 'after the interval date which is related to the tag' do
           it "pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info.registration_date + @tag.interval\
+                              + 1.day,
+              expected_items: [@item])
           end
         end
       end
 
       context 'with an item having multiple tags' do
+        before :each do
+          @tag_info1 = create(:er_items_users_tag)
+          test_tag2  = create(:test_tag2)
+          @tag_info2 = create(:er_items_users_tag,
+                              items_user: @tag_info1.items_user,
+                              tag: test_tag2)
+          @tag1 = @tag_info1.tag
+          @tag2 = @tag_info2.tag
+          @user = @tag_info2.items_user.user
+          @item = @tag_info2.items_user.item
+        end
+
         # It should depend only on the tag which has the biggest "order" value.
         # This assumption described as below is applied in this context:
         #
@@ -59,21 +87,33 @@ describe 'Unit tests for Er::Reminder' do
         #   +-> Tag_A's registration date
         context 'in a term of (A)' do
           it "doesn't pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info1.registration_date,
+              expected_items: [])
           end
         end
 
         context 'in a term of (B)' do
           it "doesn't pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info1.registration_date + @tag1.interval,
+              expected_items: [])
           end
         end
 
         context 'in a term of (C)' do
           it "doesn't pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info2.registration_date,
+              expected_items: [])
           end
         end
 
         context 'in a term of (D)' do
           it "pick up the item" do
+            could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info2.registration_date + @tag2.interval,
+              expected_items: [@item])
           end
         end
       end
@@ -99,6 +139,17 @@ describe 'Unit tests for Er::Reminder' do
 
   describe 'Sending email to users' do
     it '' do
+    end
+  end
+
+  private
+
+  def could_pick_up_items?(reminder: nil, user: nil, v_current_time: Time.now,
+                           expected_items: [])
+    Timecop.travel(v_current_time) do
+      Timecop.freeze
+      items = reminder.pick_items_from_db(user.id)
+      expect(items).to eq expected_items
     end
   end
 end
