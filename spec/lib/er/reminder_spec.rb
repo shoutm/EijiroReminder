@@ -120,6 +120,13 @@ describe 'Unit tests for Er::Reminder' do
 
       context 'with an item having "done" tag' do
         it 'never pick up the item even if 10000 days after' do
+          test_tagdone = create(:test_tagdone)
+          tag_info = create(:er_items_users_tag, tag: test_tagdone)
+          user = tag_info.items_user.user
+
+          could_pick_up_items?(reminder: @reminder, user: user,
+            v_current_time: tag_info.registration_date + 10000.days,
+            expected_items: [])
         end
       end
     end

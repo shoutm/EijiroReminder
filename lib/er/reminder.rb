@@ -17,8 +17,9 @@ module Er
         end.last
 
         if last_tag_info == nil or
-           Time.now >= last_tag_info.registration_date + \
-             last_tag_info.tag.interval
+           (last_tag_info.tag.interval != Er::Tag.INTERVAL_NEVER and
+            Time.now >= last_tag_info.registration_date + \
+              last_tag_info.tag.interval)
           picked_items.push items_user.item
         end
       end
