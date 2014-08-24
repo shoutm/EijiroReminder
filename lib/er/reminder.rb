@@ -2,6 +2,12 @@
 
 module Er
   class Reminder
+    class << self
+      attr_reader :MAX_PICKUP_ITEMS_NUM
+    end
+
+    @MAX_PICKUP_ITEMS_NUM = 10
+
     def run
     end
 
@@ -24,7 +30,7 @@ module Er
         end
       end
 
-      return picked_items
+      return picked_items[0..(Er::Reminder.MAX_PICKUP_ITEMS_NUM - 1)]
     end
 
     def send_items_by_email(user_id, item_id_array)

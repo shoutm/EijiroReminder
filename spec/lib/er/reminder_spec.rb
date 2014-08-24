@@ -40,14 +40,14 @@ describe 'Unit tests for Er::Reminder' do
 
         context 'before the interval date which is related to the tag' do
           it "doesn't pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
                                  v_current_time: @tag_info.registration_date)
           end
         end
 
         context 'on the day which is just after the interval days' do
           it "pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info.registration_date + @tag.interval,
               expected_items: [@item])
           end
@@ -55,7 +55,7 @@ describe 'Unit tests for Er::Reminder' do
 
         context 'after the interval date which is related to the tag' do
           it "pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info.registration_date + @tag.interval\
                               + 1.day,
               expected_items: [@item])
@@ -87,7 +87,7 @@ describe 'Unit tests for Er::Reminder' do
         #   +-> Tag_A's registration date
         context 'in a term of (A)' do
           it "doesn't pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info1.registration_date,
               expected_items: [])
           end
@@ -95,7 +95,7 @@ describe 'Unit tests for Er::Reminder' do
 
         context 'in a term of (B)' do
           it "doesn't pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info1.registration_date + @tag1.interval,
               expected_items: [])
           end
@@ -103,7 +103,7 @@ describe 'Unit tests for Er::Reminder' do
 
         context 'in a term of (C)' do
           it "doesn't pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info2.registration_date,
               expected_items: [])
           end
@@ -111,7 +111,7 @@ describe 'Unit tests for Er::Reminder' do
 
         context 'in a term of (D)' do
           it "pick up the item" do
-            could_pick_up_items?(reminder: @reminder, user: @user,
+            _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info2.registration_date + @tag2.interval,
               expected_items: [@item])
           end
@@ -124,7 +124,7 @@ describe 'Unit tests for Er::Reminder' do
           tag_info = create(:er_items_users_tag, tag: test_tagdone)
           user = tag_info.items_user.user
 
-          could_pick_up_items?(reminder: @reminder, user: user,
+          _could_pick_up_items?(reminder: @reminder, user: user,
             v_current_time: tag_info.registration_date + 10000.days,
             expected_items: [])
         end
@@ -132,15 +132,26 @@ describe 'Unit tests for Er::Reminder' do
     end
 
     describe 'according to the max number of picking items' do
+      before :each do
+        @user = create(:sample_user)
+      end
+
       context 'if the number of picked items is below the max value' do
         it "doesn't truncate the items" do
+          _create_items_and_check(@user,
+                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM,
+                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM)
         end
       end
 
       context 'if the number of picked items is over the max value' do
         it 'truncates the items up until the max number' do
+          _create_items_and_check(@user,
+                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM + 1,
+                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM)
         end
       end
+
     end
   end
 
@@ -151,12 +162,25 @@ describe 'Unit tests for Er::Reminder' do
 
   private
 
-  def could_pick_up_items?(reminder: nil, user: nil, v_current_time: Time.now,
+  def _could_pick_up_items?(reminder: nil, user: nil, v_current_time: Time.now,
                            expected_items: [])
     Timecop.travel(v_current_time) do
       Timecop.freeze
       items = reminder.pick_items_from_db(user.id)
       expect(items).to eq expected_items
+    end
+  end
+
+  def _create_items_and_check(user, items_num_to_create, expected_items_num)
+    _create_items(user, items_num_to_create)
+    got_items = @reminder.pick_items_from_db(user.id)
+    expect(got_items.size).to eq expected_items_num
+  end
+
+  def _create_items(user, items_num)
+    items_num.times do
+      item = create(:er_item)
+      create(:er_items_user, user: user, item: item)
     end
   end
 end
