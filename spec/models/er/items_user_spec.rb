@@ -16,6 +16,8 @@ describe Er::ItemsUser do
   end
 
   it 'is not saved without wordbook_url' do
-    expect(build(:er_items_user, wordbook_url: nil)).to have(1).errors_on(:wordbook_url)
+    item_user = build(:er_items_user, wordbook_url: nil)
+    expect(item_user.valid?).to be_falsey
+    expect(item_user.errors[:wordbook_url].size).to eq(1)
   end
 end

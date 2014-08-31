@@ -6,14 +6,20 @@ describe Er::User do
   end
 
   it 'is invalid without name' do
-    expect(build(:sample_user, name: nil)).to have(1).errors_on(:name)
+    sample_user = build(:sample_user, name: nil)
+    expect(sample_user.valid?).to be_falsey
+    expect(sample_user.errors[:name].size).to eq(1)
   end
 
   it 'is invalid without email' do
-    expect(build(:sample_user, email: nil)).to have(1).errors_on(:email)
+    sample_user = build(:sample_user, email: nil)
+    expect(sample_user.valid?).to be_falsey
+    expect(sample_user.errors[:email].size).to eq(1)
   end
 
   it 'is invalid without password' do
-    expect(build(:sample_user, password: nil)).to have(1).errors_on(:password)
+    sample_user = build(:sample_user, password: nil)
+    expect(sample_user.valid?).to be_falsey
+    expect(sample_user.errors[:password].size).to eq(1)
   end
 end

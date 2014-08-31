@@ -6,23 +6,33 @@ describe Er::Tag do
   end
 
   it 'is invalid without name' do
-    expect(build(:'1day_tag', name: nil)).to have(1).errors_on(:name)
+    tag = build(:'1day_tag', name: nil)
+    expect(tag.valid?).to be_falsey
+    expect(tag.errors[:name].size).to eq(1)
   end
 
   it 'is invalid without tag' do
-    expect(build(:'1day_tag', tag: nil)).to have(1).errors_on(:tag)
+    tag = build(:'1day_tag', tag: nil)
+    expect(tag.valid?).to be_falsey
+    expect(tag.errors[:tag].size).to eq(1)
   end
 
   it 'is invalid without interval' do
-    expect(build(:'1day_tag', interval: nil)).to have(1).errors_on(:interval)
+    tag = build(:'1day_tag', interval: nil)
+    expect(tag.valid?).to be_falsey
+    expect(tag.errors[:interval].size).to eq(1)
   end
 
   it 'is invalid without order' do
-    expect(build(:'1day_tag', order: nil)).to have(1).errors_on(:order)
+    tag = build(:'1day_tag', order: nil)
+    expect(tag.valid?).to be_falsey
+    expect(tag.errors[:order].size).to eq(1)
   end
 
   it 'is invalid when there is an existing entry with the same order' do
     create(:'test_tag1')
-    expect(build(:'test_tag1')).to have(1).errors_on(:order)
+    tag = build(:'test_tag1')
+    expect(tag.valid?).to be_falsey
+    expect(tag.errors[:order].size).to eq(1)
   end
 end

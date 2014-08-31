@@ -1,7 +1,7 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-guard :rspec, notification: false do
+guard :rspec, cmd: 'bundle exec rspec', notification: false do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^spec/.+_spec_helper\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }

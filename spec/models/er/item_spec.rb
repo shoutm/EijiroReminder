@@ -6,10 +6,14 @@ describe Er::Item do
   end
 
   it 'is invalid without e_id' do
-    expect(build(:er_item, e_id: nil)).to have(1).errors_on(:e_id)
+    item = build(:er_item, e_id: nil)
+    expect(item.valid?).to be_falsey
+    expect(item.errors[:e_id].size).to eq(1)
   end
 
   it 'is invalid without name' do
-    expect(build(:er_item, name: nil)).to have(1).errors_on(:name)
+    item = build(:er_item, name: nil)
+    expect(item.valid?).to be_falsey
+    expect(item.errors[:name].size).to eq(1)
   end
 end

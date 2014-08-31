@@ -16,6 +16,8 @@ describe Er::ItemsUsersTag do
   end
 
   it 'is not saved without registation_date' do
-    expect(build(:er_items_users_tag, registration_date: nil)).to have(1).errors_on(:registration_date)
+    item_tag = build(:er_items_users_tag, registration_date: nil)
+    expect(item_tag.valid?).to be_falsey
+    expect(item_tag.errors[:registration_date].size).to eq(1)
   end
 end
