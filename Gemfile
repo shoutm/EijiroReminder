@@ -36,6 +36,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'fakeweb'
   gem 'timecop'
+  gem 'email_spec'
 end
 
 # Use ActiveModel has_secure_password

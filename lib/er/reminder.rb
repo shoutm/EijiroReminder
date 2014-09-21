@@ -8,6 +8,11 @@ module Er
 
     @MAX_PICKUP_ITEMS_NUM = 10
 
+    def initialize(config_path: \
+                   Rails.root.join('lib/config/er_reminder_config.yaml'))
+      @config = YAML.load_file config_path
+    end
+
     def run
     end
 
@@ -33,7 +38,8 @@ module Er
       return picked_items[0..(Er::Reminder.MAX_PICKUP_ITEMS_NUM - 1)]
     end
 
-    def send_items_by_email(user_id, item_id_array)
+    def send_items_by_email(user, item_array)
+      Er::ReminderMailer.reminder(@config, user, item_array).deliver
     end
   end
 end

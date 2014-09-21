@@ -156,7 +156,28 @@ describe 'Unit tests for Er::Reminder' do
   end
 
   describe 'Sending email to users' do
-    it '' do
+    before :each do
+      @items = [create(:er_item)]
+      @reminder.send_items_by_email(@default_user, @items)
+    end
+
+    it 'sends an email with an expected From address' do
+      expect(open_last_email).to be_delivered_from \
+        @config['mail_settings']['from']
+    end
+
+    it 'sends an email with an expected recipient address' do
+      expect(open_last_email).to be_delivered_to @default_user.email
+    end
+
+    it 'sends an email with an expected subject' do
+      expect(open_last_email).to have_subject \
+        @config['mail_settings']['subject']
+    end
+
+    it 'sends an email with an expected body' do
+      @items.each do |item|
+      end
     end
   end
 

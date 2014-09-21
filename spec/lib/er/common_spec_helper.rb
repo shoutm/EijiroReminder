@@ -1,7 +1,11 @@
 def initialize_variables
     @config_path = Rails.root.join('spec/config/crawler_config.yaml')
+    reminder_config_path =
+      Rails.root.join('lib/config/er_reminder_config.yaml')
     @sampledata_path = File.join(__dir__, 'sample_data/sample_data.yaml')
     @config = YAML.load_file @config_path
+    reminder_config = YAML.load_file reminder_config_path
+    @config = @config.merge(reminder_config)
     @sample_data = YAML.load_file @sampledata_path
     @login_url = @config['paths']['login']['proto'] + File.join( \
       @config['base_url'], @config['paths']['login']['path'])

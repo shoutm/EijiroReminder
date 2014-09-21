@@ -27,6 +27,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    addressable (2.3.6)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
     byebug (2.7.0)
@@ -52,6 +53,9 @@ GEM
     crass (0.2.1)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
+    email_spec (1.6.0)
+      launchy (~> 2.1)
+      mail (~> 2.2)
     erubis (2.7.0)
     execjs (2.2.1)
     factory_girl (4.4.0)
@@ -84,6 +88,8 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.1)
+    launchy (2.4.2)
+      addressable (~> 2.3)
     libv8 (3.16.14.3)
     listen (2.7.9)
       celluloid (>= 0.15.2)
@@ -212,6 +218,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   coffee-rails (~> 4.0.0)
+  email_spec
   factory_girl_rails
   faker
   fakeweb

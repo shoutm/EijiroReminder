@@ -1,0 +1,4 @@
+mail_settings:
+  from: 'eijiro.reminder@gmail.com'
+  subject: "[Eijiro Reminder] Today's words."
+  
