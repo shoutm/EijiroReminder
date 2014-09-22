@@ -2,3 +2,13 @@ Hi <%= @user.name %>
 
 These are today's English words to remind. Please check them out and improve your memory!
 
+<% @urls_w_items.keys.each do |url| %>
+<%= url %>
+<% @urls_w_items[url].each do |item| %>
+  <%= item.name %>
+<% end %>
+<% end %>
+
+----
+Eijiro Reminder Team
+Email: <%= @from %>

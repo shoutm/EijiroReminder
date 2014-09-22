@@ -26,7 +26,7 @@ describe 'Unit tests for Er::Reminder' do
           # Create a user and an item which doesn't have any tags.
           items_user = create(:er_items_user)
           picked_items = @reminder.pick_items_from_db(items_user.user_id)
-          expect(picked_items).to eq [items_user.item]
+          expect(picked_items).to eq [items_user]
         end
       end
 
@@ -35,7 +35,7 @@ describe 'Unit tests for Er::Reminder' do
           @tag_info = create(:er_items_users_tag)
           @tag  = @tag_info.tag
           @user = @tag_info.items_user.user
-          @item = @tag_info.items_user.item
+          @user_item = @tag_info.items_user
         end
 
         context 'before the interval date which is related to the tag' do
@@ -49,7 +49,7 @@ describe 'Unit tests for Er::Reminder' do
           it "pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info.registration_date + @tag.interval,
-              expected_items: [@item])
+              expected_items: [@user_item])
           end
         end
 
@@ -58,7 +58,7 @@ describe 'Unit tests for Er::Reminder' do
             _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info.registration_date + @tag.interval\
                               + 1.day,
-              expected_items: [@item])
+              expected_items: [@user_item])
           end
         end
       end
@@ -73,7 +73,7 @@ describe 'Unit tests for Er::Reminder' do
           @tag1 = @tag_info1.tag
           @tag2 = @tag_info2.tag
           @user = @tag_info2.items_user.user
-          @item = @tag_info2.items_user.item
+          @user_item = @tag_info2.items_user
         end
 
         # It should depend only on the tag which has the biggest "order" value.
@@ -113,7 +113,7 @@ describe 'Unit tests for Er::Reminder' do
           it "pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
               v_current_time: @tag_info2.registration_date + @tag2.interval,
-              expected_items: [@item])
+              expected_items: [@user_item])
           end
         end
       end
@@ -157,8 +157,9 @@ describe 'Unit tests for Er::Reminder' do
 
   describe 'Sending email to users' do
     before :each do
-      @items = [create(:er_item)]
-      @reminder.send_items_by_email(@default_user, @items)
+      @u_items = []
+      2.times do @u_items.push create(:er_items_user) end
+      @reminder.send_items_by_email(@default_user, @u_items)
     end
 
     it 'sends an email with an expected From address' do
@@ -176,7 +177,10 @@ describe 'Unit tests for Er::Reminder' do
     end
 
     it 'sends an email with an expected body' do
-      @items.each do |item|
+      @u_items.each do |u_item|
+        # The body includes words and urls.
+        expect(open_last_email).to have_body_text u_item.wordbook_url
+        expect(open_last_email).to have_body_text u_item.item.name
       end
     end
   end

@@ -31,15 +31,15 @@ module Er
            (last_tag_info.tag.interval != Er::Tag.INTERVAL_NEVER and
             Time.now >= last_tag_info.registration_date + \
               last_tag_info.tag.interval)
-          picked_items.push items_user.item
+          picked_items.push items_user
         end
       end
 
       return picked_items[0..(Er::Reminder.MAX_PICKUP_ITEMS_NUM - 1)]
     end
 
-    def send_items_by_email(user, item_array)
-      Er::ReminderMailer.reminder(@config, user, item_array).deliver
+    def send_items_by_email(user, u_item_array)
+      Er::ReminderMailer.reminder(@config, user, u_item_array).deliver
     end
   end
 end
