@@ -1,4 +1,10 @@
+smtp_settings:
+  address:              'smtp.gmail.com'
+  port:                 587
+  user_name:            'eijiro.reminder'
+  password:             'tyoieytksxiahhkc'
+  authentication:       'plain'
+  enable_starttls_auto: true
 mail_settings:
   from: 'eijiro.reminder@gmail.com'
   subject: "[Eijiro Reminder] Today's words."
-  

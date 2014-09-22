@@ -11,12 +11,33 @@ module Er
     def initialize(config_path: \
                    Rails.root.join('lib/config/er_reminder_config.yaml'))
       @config = YAML.load_file config_path
+      _initialize_mail_settings(@config['smtp_settings'])
     end
 
     def run
     end
 
-    def pick_items_from_db(user_id)
+    def send_items_by_email(user)
+      u_item_array = _pick_items_from_db(user)
+      Er::ReminderMailer.reminder(@config, user, u_item_array).deliver
+    end
+
+    private
+
+    def _initialize_mail_settings(smtp_settings)
+      ActionMailer::Base.delivery_method = Rails.env == 'test' ? :test : :smtp
+      ActionMailer::Base.view_paths= File.dirname(__FILE__) + '/..'
+      ActionMailer::Base.raise_delivery_errors = true
+      ActionMailer::Base.smtp_settings = {
+        address:              smtp_settings['address'],
+        port:                 smtp_settings['port'],
+        user_name:            smtp_settings['user_name'],
+        password:             smtp_settings['password'],
+        authentication:       smtp_settings['authentication'],
+        enable_starttls_auto: smtp_settings['enable_starttls_auto']  }
+    end
+
+    def _pick_items_from_db(user_id)
       picked_items = []
       items_user_ary = Er::ItemsUser.where(user_id: user_id)
       items_user_ary.each do |items_user|
@@ -36,10 +57,6 @@ module Er
       end
 
       return picked_items[0..(Er::Reminder.MAX_PICKUP_ITEMS_NUM - 1)]
-    end
-
-    def send_items_by_email(user, u_item_array)
-      Er::ReminderMailer.reminder(@config, user, u_item_array).deliver
     end
   end
 end

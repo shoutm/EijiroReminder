@@ -25,7 +25,8 @@ describe 'Unit tests for Er::Reminder' do
         it 'pick up the item' do
           # Create a user and an item which doesn't have any tags.
           items_user = create(:er_items_user)
-          picked_items = @reminder.pick_items_from_db(items_user.user_id)
+          picked_items = @reminder.send(:'_pick_items_from_db',
+                                        items_user.user_id)
           expect(picked_items).to eq [items_user]
         end
       end
@@ -158,8 +159,8 @@ describe 'Unit tests for Er::Reminder' do
   describe 'Sending email to users' do
     before :each do
       @u_items = []
-      2.times do @u_items.push create(:er_items_user) end
-      @reminder.send_items_by_email(@default_user, @u_items)
+      2.times do @u_items.push create(:er_items_user, user: @default_user) end
+      @reminder.send_items_by_email(@default_user)
     end
 
     it 'sends an email with an expected From address' do
@@ -191,14 +192,14 @@ describe 'Unit tests for Er::Reminder' do
                            expected_items: [])
     Timecop.travel(v_current_time) do
       Timecop.freeze
-      items = reminder.pick_items_from_db(user.id)
+      items = reminder.send(:'_pick_items_from_db', user.id)
       expect(items).to eq expected_items
     end
   end
 
   def _create_items_and_check(user, items_num_to_create, expected_items_num)
     _create_items(user, items_num_to_create)
-    got_items = @reminder.pick_items_from_db(user.id)
+    got_items = @reminder.send(:'_pick_items_from_db', user.id)
     expect(got_items.size).to eq expected_items_num
   end
 
