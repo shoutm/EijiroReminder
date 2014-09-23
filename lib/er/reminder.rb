@@ -15,11 +15,17 @@ module Er
     end
 
     def run
+      all_users = _pick_all_users_from_db
+      all_users.each do |user|
+        send_items_by_email user
+      end
     end
 
     def send_items_by_email(user)
       u_item_array = _pick_items_from_db(user)
-      Er::ReminderMailer.reminder(@config, user, u_item_array).deliver
+      if u_item_array.size != 0
+        Er::ReminderMailer.reminder(@config, user, u_item_array).deliver
+      end
     end
 
     private
@@ -35,6 +41,10 @@ module Er
         password:             smtp_settings['password'],
         authentication:       smtp_settings['authentication'],
         enable_starttls_auto: smtp_settings['enable_starttls_auto']  }
+    end
+
+    def _pick_all_users_from_db
+      return Er::User.all
     end
 
     def _pick_items_from_db(user_id)

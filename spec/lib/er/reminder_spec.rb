@@ -157,32 +157,60 @@ describe 'Unit tests for Er::Reminder' do
   end
 
   describe 'Sending email to users' do
-    before :each do
-      @u_items = []
-      2.times do @u_items.push create(:er_items_user, user: @default_user) end
-      @reminder.send_items_by_email(@default_user)
-    end
-
-    it 'sends an email with an expected From address' do
-      expect(open_last_email).to be_delivered_from \
-        @config['mail_settings']['from']
-    end
-
-    it 'sends an email with an expected recipient address' do
-      expect(open_last_email).to be_delivered_to @default_user.email
-    end
-
-    it 'sends an email with an expected subject' do
-      expect(open_last_email).to have_subject \
-        @config['mail_settings']['subject']
-    end
-
-    it 'sends an email with an expected body' do
-      @u_items.each do |u_item|
-        # The body includes words and urls.
-        expect(open_last_email).to have_body_text u_item.wordbook_url
-        expect(open_last_email).to have_body_text u_item.item.name
+    context 'if user has items to be reminded' do
+      before :each do
+        @u_items = []
+        2.times do @u_items.push create(:er_items_user, user: @default_user) end
+        @reminder.send_items_by_email(@default_user)
       end
+
+      it 'sends an email with an expected From address' do
+        expect(open_last_email).to be_delivered_from \
+          @config['mail_settings']['from']
+      end
+
+      it 'sends an email with an expected recipient address' do
+        expect(open_last_email).to be_delivered_to @default_user.email
+      end
+
+      it 'sends an email with an expected subject' do
+        expect(open_last_email).to have_subject \
+          @config['mail_settings']['subject']
+      end
+
+      it 'sends an email with an expected body' do
+        @u_items.each do |u_item|
+          # The body includes words and urls.
+          expect(open_last_email).to have_body_text u_item.wordbook_url
+          expect(open_last_email).to have_body_text u_item.item.name
+        end
+      end
+    end
+
+    context "if user doesn't have any items to be reminded" do
+      it "doesn't send email" do
+        # In this situation, everything should be fine even if the
+        # Er::ReminderMailer.reminder is broken because it won't be called.
+        allow(Er::ReminderMailer).to receive(:reminder).and_return(nil)
+        sample_user = create(:sample_user)
+        expect{@reminder.send_items_by_email(sample_user)}.not_to raise_error
+      end
+    end
+  end
+
+  describe 'Picking target users from DB' do
+    it 'picks all user from DB' do
+      sample_user = create(:sample_user)
+      all_users = @reminder.send(:'_pick_all_users_from_db')
+      expect(all_users.sort).to eq [@default_user, sample_user].sort
+    end
+  end
+
+  describe 'Run for all users' do
+    it 'runs for all users' do
+      # All tests should be done by other tests so just check it
+      # doesn't raise any exceptions.
+      expect{ @reminder.run }.not_to raise_error
     end
   end
 
