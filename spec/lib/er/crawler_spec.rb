@@ -81,20 +81,31 @@ describe 'Unit tests for Er::Crawler' do
     _fetch_successful?(doc)
   end
 
-  it 'timeouts when a URL cannot be acccessed' do
+  it 'timeouts when a URL cannot be accessed' do
   end
 
   it 'fetches all wordbook(ej) pages' do
-    urls = []
-    expected_contents = []
-    @sample_data['wordbook_pages'].keys.each do |page_num|
-      urls.push wordbook_url_with_page_index(page_num)
-      expected_contents.push \
-        @sample_data['wordbook_pages'][page_num]['words_and_tags']
+    expected_ucp_ary = [] # ucp stands for Er::Crawler::UrlContentsPair
+    @sample_data['wordbook_pages'].keys.each do |p_index|
+      url = wordbook_url_with_page_index(p_index)
+      file_path = File.join(__dir__,
+        @sample_data['wordbook_pages'][p_index]['file_path'])
+      contents = File.open(file_path, 'r:UTF-8').read
+      expected_ucp_ary.push Er::Crawler::UrlContentsPair.new(url, contents)
     end
-    page_contents_pair_ary = @crawler.fetch_pages(urls)
-    page_contents_pair_ary.each do |url_contents_pair|
-      _fetch_successful?(Nokogiri::HTML(url_contents_pair.page_contents))
+
+    ucp_ary = @crawler.fetch_all_pages()
+
+    if @config['fakeweb_enable']
+      expect(ucp_ary.size).to eq expected_ucp_ary.size
+      for i in 0...ucp_ary.size do
+        compare_result = ucp_ary[i].compare_contents_with(expected_ucp_ary[i])
+        expect(compare_result).to be_truthy
+      end
+    else
+      page_contents_pair_ary.each do |url_contents_pair|
+        _fetch_successful?(Nokogiri::HTML(url_contents_pair.page_contents))
+      end
     end
   end
 
@@ -136,7 +147,7 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
       before(:all) do
         # No db entries before scraping
         url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save([url_contents_pair])
+        @crawler.parse_and_save(url_contents_pair)
       end
 
       it 'stores new entries in er_items table' do
@@ -158,7 +169,7 @@ describe 'Integration tests for Er::Crawler and Er::Parser' do
         Timecop.freeze
         @scraping_time = Time.now
         url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save([url_contents_pair])
+        @crawler.parse_and_save(url_contents_pair)
         Timecop.return
       end
 

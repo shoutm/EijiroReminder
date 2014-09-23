@@ -25,32 +25,38 @@ module Er
       end
     end
 
-    def fetch_pages(page_url_ary)
+    def fetch_all_pages()
       page_contents = []
-      page_url_ary.each do |page_url|
-        url_contents_pair = fetch_page(page_url)
-        page_contents.push url_contents_pair
+      # ucp stands for url_contents_pair
+      prev_ucp = current_ucp = nil
+      p_index = 0
+      while p_index += 1
+        url = _wordbook_url_with_page_index(p_index)
+        current_ucp = fetch_page(url)
+        # TODO this break is not perfect. Need to parsed first then compared.
+        break if prev_ucp != nil and prev_ucp.compare_contents_with(current_ucp)
+        page_contents.push current_ucp
+        prev_ucp = current_ucp
       end
+
       return page_contents
     end
 
     def fetch_page(page_url)
       login unless @cookie
-      contents = open(page_url, 'Cookie' => @cookie).read
+      contents = open(page_url, 'r:UTF-8', 'Cookie' => @cookie).read
       UrlContentsPair.new(page_url, contents)
     rescue
       # TODO add Logging mechanism
       nil
     end
 
-    def parse_and_save(url_contents_pair_ary)
-      url_contents_pair_ary.each do |url_contents_pair|
-        user = Er::User.find_by_email(@id)
-        parser = Parser.new(url_contents_pair.page_contents)
-        word_and_tags = parser.parse_word_and_tags
+    def parse_and_save(url_contents_pair)
+      user = Er::User.find_by_email(@id)
+      parser = Parser.new(url_contents_pair.page_contents)
+      word_and_tags = parser.parse_word_and_tags
 
-        _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
-      end
+      _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
     end
 
     class UrlContentsPair
@@ -60,9 +66,18 @@ module Er
         @page_url = page_url
         @page_contents = page_contents
       end
+
+      def compare_contents_with(obj)
+        @page_contents == obj.page_contents
+      end
     end
 
     private
+
+    def _wordbook_url_with_page_index(index_str)
+      index_str = index_str.to_s # Just in case
+      return wordbook_ej_url + '?page=' + index_str
+    end
 
     def _store_parsed_items(user, page_url, word_and_tags)
       word_and_tags.each_key do |e_id|
