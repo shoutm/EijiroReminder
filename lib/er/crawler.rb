@@ -51,13 +51,26 @@ module Er
       nil
     end
 
-    def parse_and_save(url_contents_pair)
-      user = Er::User.find_by_email(@id)
+    def parse(url_contents_pair)
       parser = Parser.new(url_contents_pair.page_contents)
-      word_and_tags = parser.parse_word_and_tags
-
-      _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
+      words_and_tags = parser.parse_word_and_tags
+      return words_and_tags
     end
+
+    def save(page_url, words_and_tags)
+      user = Er::User.find_by_email(@id)
+      _store_parsed_items(user, page_url, words_and_tags)
+    end
+
+
+
+#    def parse_and_save(url_contents_pair)
+#      user = Er::User.find_by_email(@id)
+#      parser = Parser.new(url_contents_pair.page_contents)
+#      word_and_tags = parser.parse_word_and_tags
+#
+#      _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
+#    end
 
     class UrlContentsPair
       attr_accessor :page_url, :page_contents
@@ -79,10 +92,10 @@ module Er
       return wordbook_ej_url + '?page=' + index_str
     end
 
-    def _store_parsed_items(user, page_url, word_and_tags)
-      word_and_tags.each_key do |e_id|
-        word = word_and_tags[e_id]['word']
-        tags = word_and_tags[e_id]['tags']
+    def _store_parsed_items(user, page_url, words_and_tags)
+      words_and_tags.each_key do |e_id|
+        word = words_and_tags[e_id]['word']
+        tags = words_and_tags[e_id]['tags']
         item_data = {e_id: e_id, name: word}
         item = Er::Item.find_or_create_by(item_data)
         item.update_attributes(item_data)

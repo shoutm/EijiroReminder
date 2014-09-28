@@ -23,10 +23,10 @@ def set_fakeweb
   end
 
   # When seeing a page in case wordbook page's index is over the last,
-  # hhe same page as the last will be shown.
-  last_index = @sample_data['wordbook_pages'].keys.sort.last
-  _register_wordbook_page_with_page_index(last_index,
-                                         (last_index.to_i + 1).to_s)
+  # The same page as the last will be shown.
+#  last_index = @sample_data['wordbook_pages'].keys.sort.last
+#  _register_wordbook_page_with_page_index(last_index,
+#                                         (last_index.to_i + 1).to_s)
 end
 
 def wordbook_url_with_page_index(index_str)
@@ -36,8 +36,7 @@ end
 def initialize_database
   reset_db
 
-  create(:default_user)
-  @default_user = Er::User.find_by_name('Default User')
+  initialize_testdata
 end
 
 def reset_db
@@ -52,7 +51,14 @@ def reset_db
   load "#{Rails.root}/db/seeds.rb"
 end
 
+def initialize_testdata
+  # Create default user
+  create(:default_user)
+  @default_user = Er::User.find_by_name('Default User')
+end
+
 private
+
 def _register_wordbook_page_with_page_index(p_index_str, url_index=nil)
   url_index = p_index_str unless url_index
   dummy_file_path = File.join(__dir__,

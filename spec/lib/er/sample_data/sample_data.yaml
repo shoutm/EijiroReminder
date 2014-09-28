@@ -30,3 +30,19 @@ wordbook_pages:
       '18121':
         word: murky
         tags: ['test_tag1', 'test_tagdone']
+  # This is the same page as page No.2.
+  '3': # Page number
+    file_path: 'sample_data/eowp_sample3.html'
+    words_and_tags:
+      '22886':
+        word: bridesmaid
+        tags: ['test_tag1']
+      '131851':
+        word: 'strip joint'
+        tags: []
+      '16070':
+        word: fixate
+        tags: []
+      '18121':
+        word: murky
+        tags: ['test_tag1', 'test_tagdone']
