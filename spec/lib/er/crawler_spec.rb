@@ -97,29 +97,20 @@ describe 'Unit tests for Er::Crawler' do
       expect(words_and_tags).to eq expected_words_and_tags
     end
 
-    it 'fetches all wordbook(ej) pages' do
-      expected_ucp_ary = [] # ucp stands for Er::Crawler::UrlContentsPair
+    it 'fetches and parses all wordbook(ej) pages' do
+      expected_wat = {} # wat stands for words_and_tags
       @sample_data['wordbook_pages'].keys.each do |p_index|
         url = wordbook_url_with_page_index(p_index)
-        file_path = File.join(__dir__,
-          @sample_data['wordbook_pages'][p_index]['file_path'])
-        contents = File.open(file_path, 'r:UTF-8').read
-        expected_ucp_ary.push Er::Crawler::UrlContentsPair.new(url, contents)
+        expected_wat.merge! \
+          @sample_data['wordbook_pages'][p_index]['words_and_tags']
       end
 
-#      ucp_ary = @crawler.fetch_all_pages()
-#
-#      if @config['fakeweb_enable']
-#        expect(ucp_ary.size).to eq expected_ucp_ary.size
-#        for i in 0...ucp_ary.size do
-#          compare_result = ucp_ary[i].compare_contents_with(expected_ucp_ary[i])
-#          expect(compare_result).to be_truthy
-#        end
-#      else
-#        page_contents_pair_ary.each do |url_contents_pair|
-#          _fetch_successful?(Nokogiri::HTML(url_contents_pair.page_contents))
-#        end
-#      end
+      wat = nil
+      expect{
+        wat = @crawler.fetch_and_parse_all_pages()
+      }.not_to raise_error
+
+      expect(wat).to eq expected_wat if @config['fakeweb_enable']
     end
   end
 

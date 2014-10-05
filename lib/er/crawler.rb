@@ -25,21 +25,21 @@ module Er
       end
     end
 
-    def fetch_all_pages()
-      page_contents = []
-      # ucp stands for url_contents_pair
-      prev_ucp = current_ucp = nil
+    def fetch_and_parse_all_pages()
+      # wat stands for words_and_tags
+      wat = {}
+      prev_wat = current_wat = nil
       p_index = 0
       while p_index += 1
         url = _wordbook_url_with_page_index(p_index)
-        current_ucp = fetch_page(url)
-        # TODO this break is not perfect. Need to parsed first then compared.
-        break if prev_ucp != nil and prev_ucp.compare_contents_with(current_ucp)
-        page_contents.push current_ucp
-        prev_ucp = current_ucp
+        ucp = fetch_page(url) # ucp stands for Er::Crawler::UrlContentsPair
+        current_wat = parse(ucp)
+        break if prev_wat != nil and prev_wat == current_wat
+        wat.merge! current_wat
+        prev_wat = current_wat
       end
 
-      return page_contents
+      return wat
     end
 
     def fetch_page(page_url)
@@ -61,8 +61,6 @@ module Er
       user = Er::User.find_by_email(@id)
       _store_parsed_items(user, page_url, words_and_tags)
     end
-
-
 
 #    def parse_and_save(url_contents_pair)
 #      user = Er::User.find_by_email(@id)

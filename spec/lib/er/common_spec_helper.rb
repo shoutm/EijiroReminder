@@ -21,12 +21,6 @@ def set_fakeweb
   @sample_data['wordbook_pages'].keys.each do |p_index_str|
     _register_wordbook_page_with_page_index(p_index_str)
   end
-
-  # When seeing a page in case wordbook page's index is over the last,
-  # The same page as the last will be shown.
-#  last_index = @sample_data['wordbook_pages'].keys.sort.last
-#  _register_wordbook_page_with_page_index(last_index,
-#                                         (last_index.to_i + 1).to_s)
 end
 
 def wordbook_url_with_page_index(index_str)
