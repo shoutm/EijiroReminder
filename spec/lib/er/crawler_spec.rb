@@ -93,24 +93,28 @@ describe 'Unit tests for Er::Crawler' do
       expected_words_and_tags =
         @sample_data['wordbook_pages']['1']['words_and_tags']
 
-      words_and_tags = @crawler.parse(ucp)
+      words_and_tags = ucp.parsed_contents
       expect(words_and_tags).to eq expected_words_and_tags
     end
 
     it 'fetches and parses all wordbook(ej) pages' do
-      expected_wat = {} # wat stands for words_and_tags
+      expected_ucp_array = [] # ucp stands for Er::Crawler::UrlContentsPair
       @sample_data['wordbook_pages'].keys.each do |p_index|
         url = wordbook_url_with_page_index(p_index)
-        expected_wat.merge! \
-          @sample_data['wordbook_pages'][p_index]['words_and_tags']
+        break if @sample_data['wordbook_pages'][p_index]['last_page']
+        file_path = File.join(__dir__,
+          @sample_data['wordbook_pages'][p_index]['file_path'])
+        html = File.open(file_path, 'r:UTF-8').read
+        ucp = Er::Crawler::UrlContentsPair.new(url, html)
+        expected_ucp_array.push ucp
       end
 
-      wat = nil
+      ucp_array = nil
       expect{
-        wat = @crawler.fetch_and_parse_all_pages()
+        ucp_array = @crawler.fetch_and_parse_all_pages()
       }.not_to raise_error
 
-      expect(wat).to eq expected_wat if @config['fakeweb_enable']
+      expect(ucp_array).to eq expected_ucp_array if @config['fakeweb_enable']
     end
   end
 
@@ -125,7 +129,7 @@ describe 'Unit tests for Er::Crawler' do
     context 'with no correspondent entries in DB' do
       before :each  do
         # No db entries before saving
-        _initialize_params
+        _save_items
       end
 
       it 'stores new entries in er_items table' do
@@ -148,7 +152,7 @@ describe 'Unit tests for Er::Crawler' do
         # Create items_users_tag which has test_tag2 as an existing entry.
         test_tag2 = Er::Tag.find_by_tag(:'test_tag2')
         create(:default_items_users_tag, tag: test_tag2)
-        _initialize_params
+        _save_items
       end
 
       it 'keeps having an existing entry in er_items table' do
@@ -168,7 +172,7 @@ describe 'Unit tests for Er::Crawler' do
 
     private
 
-    def _initialize_params
+    def _save_items
       @page_url = @wordbook_ej_url
       @expected_words_and_tags =
         @sample_data['wordbook_pages']['1']['words_and_tags']

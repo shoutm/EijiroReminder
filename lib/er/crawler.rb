@@ -25,21 +25,23 @@ module Er
       end
     end
 
-    def fetch_and_parse_all_pages()
+    def fetch_and_parse_all_pages
+      # returns an array of UrlContentsPair
       # wat stands for words_and_tags
+      ucp_array = []
       wat = {}
       prev_wat = current_wat = nil
       p_index = 0
       while p_index += 1
         url = _wordbook_url_with_page_index(p_index)
         ucp = fetch_page(url) # ucp stands for Er::Crawler::UrlContentsPair
-        current_wat = parse(ucp)
+        current_wat = ucp.parsed_contents
         break if prev_wat != nil and prev_wat == current_wat
-        wat.merge! current_wat
+        ucp_array.push ucp
         prev_wat = current_wat
       end
 
-      return wat
+      return ucp_array
     end
 
     def fetch_page(page_url)
@@ -49,12 +51,6 @@ module Er
     rescue
       # TODO add Logging mechanism
       nil
-    end
-
-    def parse(url_contents_pair)
-      parser = Parser.new(url_contents_pair.page_contents)
-      words_and_tags = parser.parse_word_and_tags
-      return words_and_tags
     end
 
     def save(page_url, words_and_tags)
@@ -78,8 +74,14 @@ module Er
         @page_contents = page_contents
       end
 
-      def compare_contents_with(obj)
-        @page_contents == obj.page_contents
+      def parsed_contents
+        parser = Parser.new(@page_contents)
+        words_and_tags = parser.parse_word_and_tags
+        return words_and_tags
+      end
+
+      def ==(obj)
+        (@page_url == obj.page_url) and (@page_contents == obj.page_contents)
       end
     end
 

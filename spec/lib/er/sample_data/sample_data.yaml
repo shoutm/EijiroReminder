@@ -32,6 +32,7 @@ wordbook_pages:
         tags: ['test_tag1', 'test_tagdone']
   # This is the same page as page No.2.
   '3': # Page number
+    last_page: 1
     file_path: 'sample_data/eowp_sample3.html'
     words_and_tags:
       '22886':
