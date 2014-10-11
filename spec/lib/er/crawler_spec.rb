@@ -128,8 +128,11 @@ describe 'Unit tests for Er::Crawler' do
 
     context 'with no correspondent entries in DB' do
       before :each  do
+        Timecop.freeze
         # No db entries before saving
+        _initialize_variables
         _save_items
+        Timecop.return
       end
 
       it 'stores new entries in er_items table' do
@@ -149,10 +152,12 @@ describe 'Unit tests for Er::Crawler' do
 
     context 'with an existing entry in DB' do
       before :each do
+        Timecop.freeze
+        _initialize_variables
         # Create items_users_tag which has test_tag2 as an existing entry.
-        test_tag2 = Er::Tag.find_by_tag(:'test_tag2')
-        create(:default_items_users_tag, tag: test_tag2)
+        _prepare_existing_item
         _save_items
+        Timecop.return
       end
 
       it 'keeps having an existing entry in er_items table' do
@@ -172,14 +177,28 @@ describe 'Unit tests for Er::Crawler' do
 
     private
 
-    def _save_items
+    def _initialize_variables
       @page_url = @wordbook_ej_url
       @expected_words_and_tags =
         @sample_data['wordbook_pages']['1']['words_and_tags']
-      Timecop.freeze
+    end
+
+    def _save_items
       @scraping_time = Time.now
       @crawler.save(@page_url, @expected_words_and_tags)
-      Timecop.return
+    end
+
+    def _prepare_existing_item
+      e_id = @expected_words_and_tags.keys.first
+      word = @expected_words_and_tags[e_id]['word']
+      tags_ary = @expected_words_and_tags[e_id]['tags']
+      item = create(:er_item, e_id: e_id, name: word)
+      u_item = create(:er_items_user, user: @default_user, item: item,
+                                      wordbook_url: @page_url)
+      tags_ary.each do |tag_name|
+        tag = Er::Tag.find_by_tag(tag_name)
+        create(:er_items_users_tag, items_user: u_item, tag: tag)
+      end
     end
   end
 
@@ -223,9 +242,20 @@ describe 'Unit tests for Er::Crawler' do
         tags.each do |tag_name|
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
-            expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
-              tag_id: tag.id,
-              registration_date: @scraping_time).size).to eq(1)
+            # u_item_tag stands for user's item's tag.
+            u_item_tag_ary = Er::ItemsUsersTag.where(
+              items_user_id: items_user.id, tag_id: tag.id)
+            expect(u_item_tag_ary.size).to eq(1)
+
+            if u_item_tag_ary.size == 1
+              # NOTE: The reason why I use 'round' here is due to the
+              # difference of 'number of significant figures' between
+              # ruby and postgres.
+              # - It of Ruby 2.1.1p76 is 9. (nano sec order)
+              # - It of Postgres 9.3.5 is 6. (micro sec order)
+              expect(u_item_tag_ary.first.registration_date.utc.round).to \
+                eq(@scraping_time.utc.round)
+            end
           end
         end
       end

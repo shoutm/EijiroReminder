@@ -108,12 +108,10 @@ module Er
         tags.each do |tag_name|
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
-            items_users_tag_data = {items_user_id: items_user.id,
-                                    tag_id: tag.id,
-                                    registration_date: Time.now}
-            items_users_tag = Er::ItemsUsersTag.find_or_create_by(
-              items_users_tag_data)
-            items_users_tag.update_attributes(items_users_tag_data)
+            tag_data = {items_user_id: items_user.id, tag_id: tag.id}
+            u_item_tag = Er::ItemsUsersTag.find_or_create_by(tag_data)
+            tag_data['registration_date'] = Time.now
+            u_item_tag.update_attributes(tag_data)
           end
         end
       end
