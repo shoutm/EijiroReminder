@@ -35,8 +35,8 @@ describe 'Unit tests for Er::Reminder' do
         before :each do
           @tag_info = create(:er_items_users_tag)
           @tag  = @tag_info.tag
-          @user = @tag_info.items_user.user
           @user_item = @tag_info.items_user
+          @user = @user_item.user
         end
 
         context 'before the interval date which is related to the tag' do
@@ -46,10 +46,18 @@ describe 'Unit tests for Er::Reminder' do
           end
         end
 
+        context 'on the day which is just before the interval days' do
+          it "pick up the item" do
+            _could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info.registration_date +
+                              @tag.interval.days - 1.second)
+          end
+        end
+
         context 'on the day which is just after the interval days' do
           it "pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
-              v_current_time: @tag_info.registration_date + @tag.interval,
+              v_current_time: @tag_info.registration_date + @tag.interval.days,
               expected_items: [@user_item])
           end
         end
@@ -89,32 +97,38 @@ describe 'Unit tests for Er::Reminder' do
         context 'in a term of (A)' do
           it "doesn't pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
-              v_current_time: @tag_info1.registration_date,
-              expected_items: [])
+              v_current_time: @tag_info1.registration_date)
           end
         end
 
         context 'in a term of (B)' do
           it "doesn't pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
-              v_current_time: @tag_info1.registration_date + @tag1.interval,
-              expected_items: [])
+              v_current_time: @tag_info1.registration_date +
+                              @tag1.interval.days)
           end
         end
 
         context 'in a term of (C)' do
           it "doesn't pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
-              v_current_time: @tag_info2.registration_date,
-              expected_items: [])
+              v_current_time: @tag_info2.registration_date)
+          end
+        end
+
+        context 'just before the begining of (D)' do
+          it "doesn't pick up the item" do
+            _could_pick_up_items?(reminder: @reminder, user: @user,
+              v_current_time: @tag_info2.registration_date +
+                              @tag2.interval.days - 1.second)
           end
         end
 
         context 'in a term of (D)' do
           it "pick up the item" do
             _could_pick_up_items?(reminder: @reminder, user: @user,
-              v_current_time: @tag_info2.registration_date + @tag2.interval,
-              expected_items: [@user_item])
+              v_current_time: @tag_info2.registration_date +
+              @tag2.interval.days, expected_items: [@user_item])
           end
         end
       end
