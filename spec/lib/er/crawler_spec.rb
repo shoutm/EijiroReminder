@@ -119,6 +119,15 @@ describe 'Unit tests for Er::Crawler' do
 
       expect(ucp_array).to eq expected_ucp_array if @config['fakeweb_enable']
     end
+
+    private
+
+    def _fetch_successful?(nokogiri_html)
+      tabenja = nokogiri_html.css('div#tabenja')
+      expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
+      tabjaen = nokogiri_html.css('div#tabjaen')
+      expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
+    end
   end
 
   describe 'Saving contents' do
@@ -153,8 +162,9 @@ describe 'Unit tests for Er::Crawler' do
     context 'with an existing entry in DB' do
       before :each do
         _initialize_variables
-        # Create items_users_tag which has test_tag2 as an existing entry.
-        _prepare_existing_item
+        # Preparation
+        _preparation
+
         Timecop.freeze
         _save_items
         Timecop.return
@@ -169,14 +179,19 @@ describe 'Unit tests for Er::Crawler' do
                              @expected_words_and_tags)
       end
 
-      it 'keeps having an existing entry in er_items_users_tags table' do
-        existing_wat = @expected_words_and_tags.delete @e_id
-        # Check new entries
-        check_er_items_users_tags(@default_user, @page_url,
-                                  @expected_words_and_tags, @scraping_time)
-        # Check the existing entry
-        check_er_items_users_tags(@default_user, @page_url,
-                                  {@e_id => existing_wat}, @registration_date)
+      describe 'er_items_users_tags table' do
+        it 'keeps having an existing entry' do
+          check_er_items_users_tags(@default_user, @page_url,
+            @existing_entry, @registration_date)
+        end
+
+        it 'removes tag which has been removed in Eijiro page' do
+          check_er_items_users_tags(@default_user, @page_url,
+            @existing_entry_tag_removed, @registration_date)
+          expect {
+            Er::ItemsUsersTag.find(@removed_u_item_tag.id)
+          }.to raise_error ActiveRecord::RecordNotFound
+        end
       end
     end
 
@@ -185,7 +200,7 @@ describe 'Unit tests for Er::Crawler' do
     def _initialize_variables
       @page_url = @wordbook_ej_url
       @expected_words_and_tags =
-        @sample_data['wordbook_pages']['1']['words_and_tags']
+        @sample_data['wordbook_pages']['1']['words_and_tags'].deep_dup
     end
 
     def _save_items
@@ -193,30 +208,50 @@ describe 'Unit tests for Er::Crawler' do
       @crawler.save(@page_url, @expected_words_and_tags)
     end
 
-    def _prepare_existing_item
-      @e_id = @expected_words_and_tags.keys.first
-      word = @expected_words_and_tags[@e_id]['word']
-      tags_ary = @expected_words_and_tags[@e_id]['tags']
-      item = create(:er_item, e_id: @e_id, name: word)
+    def _preparation
+      @registration_date = Time.now
+      _populate_existing_entry_in_db
+      _populate_tag_removed_entry
+    end
+
+    def _populate_existing_entry_in_db
+      # Populating existing entry
+      e_id = @expected_words_and_tags.keys.first
+      _register_words_and_tags e_id, @registration_date
+      existing_wat = @expected_words_and_tags[e_id]
+      @existing_entry = {e_id => existing_wat}
+    end
+
+    def _populate_tag_removed_entry
+      # Populate an existing entry and delete a tag from
+      # the expected object
+      before_populating = Time.now
+      e_id = @expected_words_and_tags.keys.last
+      _register_words_and_tags e_id, @registration_date
+      existing_wat = @expected_words_and_tags[e_id]
+      removed_tag_name = existing_wat['tags'].pop
+
+      # Finding out the removed tag object
+      populated_u_item_tags = Er::ItemsUsersTag.where('created_at >= ?',
+                                                      before_populating)
+      @removed_u_item_tag = populated_u_item_tags.find do |u_item_tag|
+        u_item_tag.tag.tag == removed_tag_name
+      end
+
+      @existing_entry_tag_removed = {e_id => existing_wat}
+    end
+
+    def _register_words_and_tags(e_id, registration_date)
+      word = @expected_words_and_tags[e_id]['word']
+      tags_ary = @expected_words_and_tags[e_id]['tags']
+      item = create(:er_item, e_id: e_id, name: word)
       u_item = create(:er_items_user, user: @default_user, item: item,
                                       wordbook_url: @page_url)
-      Timecop.freeze
-      @registration_date = Time.now
       tags_ary.each do |tag_name|
         tag = Er::Tag.find_by_tag(tag_name)
         create(:er_items_users_tag, items_user: u_item, tag: tag,
-               registration_date: @registration_date)
+               registration_date: registration_date)
       end
-      Timecop.return
     end
-  end
-
-  private
-
-  def _fetch_successful?(nokogiri_html)
-    tabenja = nokogiri_html.css('div#tabenja')
-    expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
-    tabjaen = nokogiri_html.css('div#tabjaen')
-    expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
   end
 end

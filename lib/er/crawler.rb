@@ -90,12 +90,11 @@ module Er
         tags = words_and_tags[e_id]['tags']
         item_data = {e_id: e_id, name: word}
         item = Er::Item.find_or_create_by(item_data)
-        item.update_attributes(item_data)
 
         items_user_data = {user_id: user.id, item_id: item.id,
                            wordbook_url: page_url}
         items_user = Er::ItemsUser.find_or_create_by(items_user_data)
-        items_user.update_attributes(items_user_data)
+        existing_u_item_tag_ids = items_user.tags.collect { |tag| tag.id }
 
         tags.each do |tag_name|
           tag = Er::Tag.find_by_tag(tag_name)
@@ -105,8 +104,15 @@ module Er
             if u_item_tag.new_record?
               u_item_tag.registration_date = Time.now
               u_item_tag.save!
+            else
+              existing_u_item_tag_ids.delete u_item_tag.id
             end
           end
+        end
+
+        # Delete tags which were removed on Eijiro pages
+        existing_u_item_tag_ids.each do |u_item_tag_id|
+          Er::ItemsUsersTag.find(u_item_tag_id).destroy
         end
       end
     end
