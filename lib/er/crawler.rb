@@ -55,7 +55,21 @@ module Er
 
     def save(page_url, words_and_tags)
       user = Er::User.find_by_email(@id)
-      _store_parsed_items(user, page_url, words_and_tags)
+      words_and_tags.each_key do |e_id|
+        word = words_and_tags[e_id]['word']
+        tag_name_ary = words_and_tags[e_id]['tags']
+
+        # Storing Er::Item
+        item = _store_er_item(e_id, word)
+
+        # Storing Er::ItemsUser
+        u_item = _store_er_items_user(user.id, item.id, page_url)
+        existing_u_item_tag_id_ary = u_item.tags.collect { |tag| tag.id }
+
+        # Storing/Deleting Er::ItemsUsersTag
+        _store_and_delete_er_items_users_tags(u_item.id, tag_name_ary,
+                                              existing_u_item_tag_id_ary)
+      end
     end
 
     class UrlContentsPair
@@ -82,24 +96,6 @@ module Er
     def _wordbook_url_with_page_index(index_str)
       index_str = index_str.to_s # Just in case
       return wordbook_ej_url + '?page=' + index_str
-    end
-
-    def _store_parsed_items(user, page_url, words_and_tags)
-      words_and_tags.each_key do |e_id|
-        word = words_and_tags[e_id]['word']
-        tag_name_ary = words_and_tags[e_id]['tags']
-
-        # Storing Er::Item
-        item = _store_er_item(e_id, word)
-
-        # Storing Er::ItemsUser
-        u_item = _store_er_items_user(user.id, item.id, page_url)
-        existing_u_item_tag_id_ary = u_item.tags.collect { |tag| tag.id }
-
-        # Storing/Deleting Er::ItemsUsersTag
-        _store_and_delete_er_items_users_tags(u_item.id, tag_name_ary,
-                                              existing_u_item_tag_id_ary)
-      end
     end
 
     def _store_er_item(e_id, word)
