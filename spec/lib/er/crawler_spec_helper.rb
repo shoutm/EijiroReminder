@@ -45,7 +45,7 @@ module Er
               expect(u_item_tag_ary.size).to eq(1)
 
               if u_item_tag_ary.size == 1
-                # NOTE: The reason why I use 'round' here is due to the
+                # NOTE: The reason why I use 'strftime' here is due to the
                 # difference of 'number of significant figures' between
                 # ruby and postgres.
                 # - Ruby(2.1.1p76)'s one is 9. (nano sec order)
