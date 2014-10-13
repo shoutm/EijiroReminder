@@ -15,8 +15,10 @@ See http://eowp.alc.co.jp/info/ for more details about Eijiro Pro.
 * PostgreSQL: 9.3.5
 
 == Database Initialization
-* Create databases written in config/database.yml
-* Run the command below and type 'yes'. But THIS WILL DELETE ALL OF YOUR DATA. Please take care.
+* Create databases
+Create databases written in config/database.yml
+* Execute db reset task
+Run the command below and type 'yes'. But THIS WILL DELETE ALL OF YOUR DATA. Please take care.
 
   $ rake er:reset_db
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -30,6 +32,6 @@ See http://eowp.alc.co.jp/info/ for more details about Eijiro Pro.
 == Deployment instructions
 
 == How to run the test suite
-* Run the command below.
+Run the command below.
 
   $ rake exec rspec
