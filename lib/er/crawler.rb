@@ -58,14 +58,6 @@ module Er
       _store_parsed_items(user, page_url, words_and_tags)
     end
 
-#    def parse_and_save(url_contents_pair)
-#      user = Er::User.find_by_email(@id)
-#      parser = Parser.new(url_contents_pair.page_contents)
-#      word_and_tags = parser.parse_word_and_tags
-#
-#      _store_parsed_items(user, url_contents_pair.page_url, word_and_tags)
-#    end
-
     class UrlContentsPair
       attr_accessor :page_url, :page_contents
 

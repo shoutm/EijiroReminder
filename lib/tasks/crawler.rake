@@ -1,15 +1,7 @@
 namespace :er do
   desc 'Crawling Eijiro for all registered users'
   task :crawl => :environment do
-    users = Er::User.all
-    users.each do |user|
-      crawler = Er::Crawler.new(id: user.email, password: user.password)
-      # ucp stands for Er::Crawler::UrlContentsPair
-      ucp_array = crawler.fetch_and_parse_all_pages
-      ucp_array.each do |ucp|
-        crawler.save(ucp.page_url, ucp.parsed_contents)
-      end
-    end
+    Er::CrawlerInvoker.new.run_for_all_users
   end
 
   desc 'Reminding English words to all registered users'

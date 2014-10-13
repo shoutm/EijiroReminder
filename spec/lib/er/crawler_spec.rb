@@ -2,8 +2,11 @@
 require 'spec_helper'
 require 'yaml'
 require "#{File.dirname(__FILE__)}/common_spec_helper"
+require "#{File.dirname(__FILE__)}/crawler_spec_helper"
 
 describe 'Unit tests for Er::Crawler' do
+  include Er::CrawlerSpecHelper
+
   before :all do
     initialize_variables
     initialize_database
@@ -120,10 +123,7 @@ describe 'Unit tests for Er::Crawler' do
 
   describe 'Saving contents' do
     before :each do
-      # Create Er::Tag entries
-      create(:test_tag1)
-      create(:test_tag2)
-      create(:test_tagdone)
+      create_test_tags
     end
 
     context 'with no correspondent entries in DB' do
@@ -136,17 +136,17 @@ describe 'Unit tests for Er::Crawler' do
       end
 
       it 'stores new entries in er_items table' do
-        _check_er_items(@expected_words_and_tags)
+        check_er_items(@expected_words_and_tags)
       end
 
       it 'stores new entries in er_items_users table' do
-        _check_er_items_users(@default_user, @page_url,
-                              @expected_words_and_tags)
+        check_er_items_users(@default_user, @page_url,
+                             @expected_words_and_tags)
       end
 
       it 'stores new entries in er_items_users_tags table' do
-        _check_er_items_users_tags(@default_user, @page_url,
-                                   @expected_words_and_tags)
+        check_er_items_users_tags(@default_user, @page_url,
+                                  @expected_words_and_tags, @scraping_time)
       end
     end
 
@@ -161,17 +161,17 @@ describe 'Unit tests for Er::Crawler' do
       end
 
       it 'keeps having an existing entry in er_items table' do
-        _check_er_items(@expected_words_and_tags)
+        check_er_items(@expected_words_and_tags)
       end
 
       it 'keeps having an existing entry in er_items_users table' do
-        _check_er_items_users(@default_user, @page_url,
-                              @expected_words_and_tags)
+        check_er_items_users(@default_user, @page_url,
+                             @expected_words_and_tags)
       end
 
       it 'keeps having an existing entry in er_items_users_tags table' do
-        _check_er_items_users_tags(@default_user, @page_url,
-                                   @expected_words_and_tags)
+        check_er_items_users_tags(@default_user, @page_url,
+                                  @expected_words_and_tags, @scraping_time)
       end
     end
 
@@ -210,168 +210,4 @@ describe 'Unit tests for Er::Crawler' do
     tabjaen = nokogiri_html.css('div#tabjaen')
     expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
   end
-
-  def _check_er_items(expected_words_and_tags)
-    expect {
-      expected_words_and_tags.each_key do |e_id|
-        word = expected_words_and_tags[e_id]['word']
-        expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
-      end
-    }.not_to raise_error
-  end
-
-  def _check_er_items_users(user, page_url, expected_words_and_tags)
-    expect {
-      expected_words_and_tags.each_key do |e_id|
-        item = Er::Item.find_by_e_id(e_id)
-        expect(Er::ItemsUser.where(user_id: user.id,
-          item_id: item.id,
-          wordbook_url: page_url).size).to eq(1)
-      end
-    }.not_to raise_error
-  end
-
-  def _check_er_items_users_tags(user, page_url, expected_words_and_tags)
-    expect {
-      expected_words_and_tags.each_key do |e_id|
-        tags = expected_words_and_tags[e_id]['tags']
-        item = Er::Item.find_by_e_id(e_id)
-        items_user = Er::ItemsUser.find_by(user_id: user.id,
-                                           item_id: item.id,
-                                           wordbook_url: page_url)
-        tags.each do |tag_name|
-          tag = Er::Tag.find_by_tag(tag_name)
-          if tag
-            # u_item_tag stands for user's item's tag.
-            u_item_tag_ary = Er::ItemsUsersTag.where(
-              items_user_id: items_user.id, tag_id: tag.id)
-            expect(u_item_tag_ary.size).to eq(1)
-
-            if u_item_tag_ary.size == 1
-              # NOTE: The reason why I use 'round' here is due to the
-              # difference of 'number of significant figures' between
-              # ruby and postgres.
-              # - It of Ruby 2.1.1p76 is 9. (nano sec order)
-              # - It of Postgres 9.3.5 is 6. (micro sec order)
-              expect(u_item_tag_ary.first.registration_date.utc.round).to \
-                eq(@scraping_time.utc.round)
-            end
-          end
-        end
-      end
-    }.not_to raise_error
-  end
 end
-
-=begin
-describe 'Integration tests for Er::Crawler and Er::Parser' do
-  before :all do
-    initialize_variables
-    initialize_database
-    set_fakeweb if @config['fakeweb_enable']
-    @crawler = Er::Crawler.new(
-        id: @default_user.email,
-        password: @default_user.password)
-    set_testdata
-  end
-
-  def set_testdata
-    if @config['fakeweb_enable']
-      @expected_words_and_tags =
-        @sample_data['wordbook_pages']['1']['words_and_tags']
-    else
-      user = Er::User.find_by_email(@default_user.email)
-      url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
-      parser = Er::Parser.new(url_contents_pair.page_contents)
-      @expected_words_and_tags = parser.parse_word_and_tags
-    end
-  end
-
-  describe 'fetching a page, parsing and updating database' do
-    context 'with no correspondent entries in DB' do
-      before(:all) do
-        # No db entries before scraping
-        url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save(url_contents_pair)
-      end
-
-      it 'stores new entries in er_items table' do
-        check_er_items
-      end
-
-      it 'stores new entries in er_items_users table' do
-        check_er_items_users
-      end
-
-      it 'stores new entries in er_items_users_tags table' do
-        check_er_items_users_tags
-      end
-    end
-
-    context 'with an existing entry in DB' do
-      before(:all) do
-        create(:default_items_users_tag)
-        Timecop.freeze
-        @scraping_time = Time.now
-        url_contents_pair = @crawler.fetch_page(@wordbook_ej_url)
-        @crawler.parse_and_save(url_contents_pair)
-        Timecop.return
-      end
-
-      it 'keeps having an existing entry in er_items table' do
-        check_er_items
-      end
-
-      it 'keeps having an existing entry in er_items_users table' do
-        check_er_items_users
-      end
-
-      it 'keeps having an existing entry in er_items_users_tags table' do
-        check_er_items_users_tags
-      end
-    end
-  end
-
-  private
-
-  def check_er_items
-    expect {
-      @expected_words_and_tags.each_key do |e_id|
-        word = @expected_words_and_tags[e_id]['word']
-        expect(Er::Item.where(e_id: e_id, name: word).size).to eq(1)
-      end
-    }.not_to raise_error
-  end
-
-  def check_er_items_users
-    expect {
-      @expected_words_and_tags.each_key do |e_id|
-        item = Er::Item.find_by_e_id(e_id)
-        expect(Er::ItemsUser.where(user_id: @default_user.id,
-          item_id: item.id,
-          wordbook_url: @wordbook_ej_url).size).to eq(1)
-      end
-    }.not_to raise_error
-  end
-
-  def check_er_items_users_tags
-    expect {
-      @expected_words_and_tags.each_key do |e_id|
-        tags = @expected_words_and_tags[e_id]['tags']
-        item = Er::Item.find_by_e_id(e_id)
-        items_user = Er::ItemsUser.find_by(user_id: @default_user.id,
-                                           item_id: item.id,
-                                           wordbook_url: @wordbook_ej_url)
-        tags.each do |tag_name|
-          tag = Er::Tag.find_by_tag(tag_name)
-          if tag
-            expect(Er::ItemsUsersTag.where(items_user_id: items_user.id,
-              tag_id: tag.id,
-              registration_date: @scraping_time).size).to eq(1)
-          end
-        end
-      end
-    }.not_to raise_error
-  end
-end
-=end
