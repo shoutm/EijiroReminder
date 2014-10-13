@@ -87,33 +87,51 @@ module Er
     def _store_parsed_items(user, page_url, words_and_tags)
       words_and_tags.each_key do |e_id|
         word = words_and_tags[e_id]['word']
-        tags = words_and_tags[e_id]['tags']
-        item_data = {e_id: e_id, name: word}
-        item = Er::Item.find_or_create_by(item_data)
+        tag_name_ary = words_and_tags[e_id]['tags']
 
-        items_user_data = {user_id: user.id, item_id: item.id,
-                           wordbook_url: page_url}
-        items_user = Er::ItemsUser.find_or_create_by(items_user_data)
-        existing_u_item_tag_ids = items_user.tags.collect { |tag| tag.id }
+        # Storing Er::Item
+        item = _store_er_item(e_id, word)
 
-        tags.each do |tag_name|
-          tag = Er::Tag.find_by_tag(tag_name)
-          if tag
-            tag_data = {items_user_id: items_user.id, tag_id: tag.id}
-            u_item_tag = Er::ItemsUsersTag.find_or_initialize_by(tag_data)
-            if u_item_tag.new_record?
-              u_item_tag.registration_date = Time.now
-              u_item_tag.save!
-            else
-              existing_u_item_tag_ids.delete u_item_tag.id
-            end
-          end
+        # Storing Er::ItemsUser
+        u_item = _store_er_items_user(user.id, item.id, page_url)
+        existing_u_item_tag_id_ary = u_item.tags.collect { |tag| tag.id }
+
+        # Storing/Deleting Er::ItemsUsersTag
+        _store_and_delete_er_items_users_tags(u_item.id, tag_name_ary,
+                                              existing_u_item_tag_id_ary)
+      end
+    end
+
+    def _store_er_item(e_id, word)
+      item_data = {e_id: e_id, name: word}
+      return Er::Item.find_or_create_by(item_data)
+    end
+
+    def _store_er_items_user(user_id, item_id, page_url)
+      items_user_data = {user_id: user_id, item_id: item_id,
+                         wordbook_url: page_url}
+      return Er::ItemsUser.find_or_create_by(items_user_data)
+    end
+
+    def _store_and_delete_er_items_users_tags(u_item_id, tag_name_ary,
+                                              existing_u_item_tag_id_ary)
+      tag_name_ary.each do |tag_name|
+        tag = Er::Tag.find_by_tag(tag_name)
+        next unless tag
+
+        tag_data = {items_user_id: u_item_id, tag_id: tag.id}
+        u_item_tag = Er::ItemsUsersTag.find_or_initialize_by(tag_data)
+        if u_item_tag.new_record?
+          u_item_tag.registration_date = Time.now
+          u_item_tag.save!
+        else
+          existing_u_item_tag_id_ary.delete u_item_tag.id
         end
+      end
 
-        # Delete tags which were removed on Eijiro pages
-        existing_u_item_tag_ids.each do |u_item_tag_id|
-          Er::ItemsUsersTag.find(u_item_tag_id).destroy
-        end
+      # Delete tags which were removed on Eijiro pages
+      existing_u_item_tag_id_ary.each do |u_item_tag_id|
+        Er::ItemsUsersTag.find(u_item_tag_id).destroy
       end
     end
 
