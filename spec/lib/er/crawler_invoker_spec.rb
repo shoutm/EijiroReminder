@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require 'spec_helper'
-require 'yaml'
 require "#{File.dirname(__FILE__)}/common_spec_helper"
 require "#{File.dirname(__FILE__)}/crawler_spec_helper"
 
@@ -18,6 +17,8 @@ describe 'Er::CrawlerInvoker' do
   # for multiple users.
   describe 'run_for_all_users' do
     before :each do
+      # This spec can be done only when fakeweb_enabled is true
+      skip unless @config['fakeweb_enable']
       Timecop.freeze
       @scraping_time = Time.now
       # Create Er::Tag entries
@@ -29,6 +30,8 @@ describe 'Er::CrawlerInvoker' do
     end
 
     it 'stores new entries in er_items table' do
+      # This spec can be done only when fakeweb_enabled is true
+      skip unless @config['fakeweb_enable']
       @sample_data['wordbook_pages'].keys.each do |p_index|
         expected = @sample_data['wordbook_pages'][p_index]['words_and_tags']
         check_er_items(expected)
@@ -36,12 +39,16 @@ describe 'Er::CrawlerInvoker' do
     end
 
     it 'stores new entries in er_items_users table' do
+      # This spec can be done only when fakeweb_enabled is true
+      skip unless @config['fakeweb_enable']
       _check_with_block do |user, url, expected|
         check_er_items_users(user, url, expected)
       end
     end
 
     it 'stores new entries in er_items_users_tags table' do
+      # This spec can be done only when fakeweb_enabled is true
+      skip unless @config['fakeweb_enable']
       _check_with_block do |user, url, expected|
         check_er_items_users_tags(user, url, expected, @scraping_time)
       end

@@ -28,7 +28,7 @@ module Er
     end
 
     def check_er_items_users_tags(user, page_url, expected_words_and_tags,
-                                  scraping_time)
+                                  registration_date)
       expect {
         expected_words_and_tags.each_key do |e_id|
           tags = expected_words_and_tags[e_id]['tags']
@@ -51,7 +51,7 @@ module Er
                 # - It of Ruby 2.1.1p76 is 9. (nano sec order)
                 # - It of Postgres 9.3.5 is 6. (micro sec order)
                 expect(u_item_tag_ary.first.registration_date.utc.round).to \
-                  eq(scraping_time.utc.round)
+                  eq(registration_date.utc.round)
               end
             end
           end
