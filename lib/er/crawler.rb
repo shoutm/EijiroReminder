@@ -101,9 +101,11 @@ module Er
           tag = Er::Tag.find_by_tag(tag_name)
           if tag
             tag_data = {items_user_id: items_user.id, tag_id: tag.id}
-            u_item_tag = Er::ItemsUsersTag.find_or_create_by(tag_data)
-            tag_data['registration_date'] = Time.now
-            u_item_tag.update_attributes(tag_data)
+            u_item_tag = Er::ItemsUsersTag.find_or_initialize_by(tag_data)
+            if u_item_tag.new_record?
+              u_item_tag.registration_date = Time.now
+              u_item_tag.save!
+            end
           end
         end
       end

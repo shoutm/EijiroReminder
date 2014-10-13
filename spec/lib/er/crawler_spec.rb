@@ -128,9 +128,9 @@ describe 'Unit tests for Er::Crawler' do
 
     context 'with no correspondent entries in DB' do
       before :each  do
-        Timecop.freeze
         # No db entries before saving
         _initialize_variables
+        Timecop.freeze
         _save_items
         Timecop.return
       end
@@ -152,10 +152,10 @@ describe 'Unit tests for Er::Crawler' do
 
     context 'with an existing entry in DB' do
       before :each do
-        Timecop.freeze
         _initialize_variables
         # Create items_users_tag which has test_tag2 as an existing entry.
         _prepare_existing_item
+        Timecop.freeze
         _save_items
         Timecop.return
       end
@@ -170,8 +170,13 @@ describe 'Unit tests for Er::Crawler' do
       end
 
       it 'keeps having an existing entry in er_items_users_tags table' do
+        existing_wat = @expected_words_and_tags.delete @e_id
+        # Check new entries
         check_er_items_users_tags(@default_user, @page_url,
                                   @expected_words_and_tags, @scraping_time)
+        # Check the existing entry
+        check_er_items_users_tags(@default_user, @page_url,
+                                  {@e_id => existing_wat}, @registration_date)
       end
     end
 
@@ -189,16 +194,20 @@ describe 'Unit tests for Er::Crawler' do
     end
 
     def _prepare_existing_item
-      e_id = @expected_words_and_tags.keys.first
-      word = @expected_words_and_tags[e_id]['word']
-      tags_ary = @expected_words_and_tags[e_id]['tags']
-      item = create(:er_item, e_id: e_id, name: word)
+      @e_id = @expected_words_and_tags.keys.first
+      word = @expected_words_and_tags[@e_id]['word']
+      tags_ary = @expected_words_and_tags[@e_id]['tags']
+      item = create(:er_item, e_id: @e_id, name: word)
       u_item = create(:er_items_user, user: @default_user, item: item,
                                       wordbook_url: @page_url)
+      Timecop.freeze
+      @registration_date = Time.now
       tags_ary.each do |tag_name|
         tag = Er::Tag.find_by_tag(tag_name)
-        create(:er_items_users_tag, items_user: u_item, tag: tag)
+        create(:er_items_users_tag, items_user: u_item, tag: tag,
+               registration_date: @registration_date)
       end
+      Timecop.return
     end
   end
 
