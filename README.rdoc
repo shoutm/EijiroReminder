@@ -1,28 +1,35 @@
-== README
+= EijiroReminder
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+== About this software
+This is purposed for helping remembering English words which you
+have learned in Eijiro Pro.
 
-Things you may want to cover:
+I adopted "Spaced Repetition" methods in this software. English words
+you've learned will be e-mailed to you in appropriate interval so that
+you can be reminded when you might forget them.
 
-* Ruby version
+See http://eowp.alc.co.jp/info/ for more details about Eijiro Pro.
 
-* System dependencies
+== Required softwares and thier versions
+* Ruby: 2.1.1
+* PostgreSQL: 9.3.5
 
-* Configuration
+== Database Initialization
+* Create databases written in config/database.yml
+* Run the command below and type 'yes'. But THIS WILL DELETE ALL OF YOUR DATA. Please take care.
 
-* Database creation
+  $ rake er:reset_db
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  CAUTION: This task will delete all data in the database.
+  Do you really want to continue? (yes/no)
+  yes  <- type 
+  Done.
 
-* Database initialization
+== Required services (job queues, cache servers, search engines, etc.)
 
-* How to run the test suite
+== Deployment instructions
 
-* Services (job queues, cache servers, search engines, etc.)
+== How to run the test suite
+* Run the command below.
 
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  $ rake exec rspec
