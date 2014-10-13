@@ -48,10 +48,12 @@ module Er
                 # NOTE: The reason why I use 'round' here is due to the
                 # difference of 'number of significant figures' between
                 # ruby and postgres.
-                # - It of Ruby 2.1.1p76 is 9. (nano sec order)
-                # - It of Postgres 9.3.5 is 6. (micro sec order)
-                expect(u_item_tag_ary.first.registration_date.utc.round).to \
-                  eq(registration_date.utc.round)
+                # - Ruby(2.1.1p76)'s one is 9. (nano sec order)
+                # - Postgres(9.3.5)'s one is 6. (micro sec order)
+                t = lambda {|t| t.strftime '%Y-%m-%d %H:%M:%S.%6N'}
+                got = t.yield u_item_tag_ary.first.registration_date.utc
+                expected = t.yield registration_date.utc
+                expect(got).to eq(expected)
               end
             end
           end
