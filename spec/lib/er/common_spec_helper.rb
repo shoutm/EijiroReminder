@@ -7,17 +7,21 @@ def initialize_variables
     reminder_config = YAML.load_file reminder_config_path
     @config = @config.merge(reminder_config)
     @sample_data = YAML.load_file @sampledata_path
-    @login_url = @config['paths']['login']['proto'] + File.join( \
-      @config['base_url'], @config['paths']['login']['path'])
-    @wordbook_ej_url = @config['paths']['wordbook_ej']['proto'] + File.join( \
-      @config['base_url'], @config['paths']['wordbook_ej']['path'])
+    @login_post_url  = @config['urls']['login_post_url']
+    @login_get_url   = @config['urls']['login_get_url']
+    @wordbook_ej_url = @config['urls']['wordbook_ej_url']
     FakeWeb.allow_net_connect = !@config['fakeweb_enable']
 end
 
 def set_fakeweb
   FakeWeb.clean_registry
-  FakeWeb.register_uri :post, @login_url,
-    :'Set-Cookie' => @sample_data['cookie']
+
+  # login_post_url
+  cookie1 = [@sample_data['cookies']['ltpatoken2'],
+             @sample_data['cookies']['pd_h_session_id']].join(',')
+  cookie2 = [cookie1, @sample_data['cookies']['eowpuser']].join(',')
+  FakeWeb.register_uri :post, @login_post_url, :'Set-Cookie' => cookie1
+  FakeWeb.register_uri :get, @login_get_url, :'Set-Cookie' => cookie2
   @sample_data['wordbook_pages'].keys.each do |p_index_str|
     _register_wordbook_page_with_page_index(p_index_str)
   end

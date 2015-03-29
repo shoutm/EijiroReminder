@@ -1,4 +1,7 @@
-cookie: 'eowpuser=4f098317835e025997c1c8698a850c09.0.0.0.0.1.1.0.1.0.1.50.1.1.0.0.Sat_ 24-May-2014 14:59:59 GMT; domain=.eowp.alc.co.jp; path=/'
+cookies:
+  ltpatoken2: 'LtpaToken2=S+/KRLqkMlFIYAr9Jh1eB5HzYPLIkrjsZ6O9AHsPbeXSTQji1rxFPQvV5hHsZPU52b29i/WOczVuwa0IbkfnxqB2GyyeSBeRMSUYO3SaP39IE8/MKekXuz8GqfD9P64hDZJONKtife6eOOtuIYi7yvWlRikEp/GG1robfBaPLBL5xolfl7dRmtjEy85c6sIqlfOPGHZzwFnp7u2eSkhlm6PM0ZhyHksNxU1QPNums1xfS9Hp8Vt39JNjvirfjqEFH0l2XbpXNOS+ibPSSRYjgQ1m7ESFXPwHnIpuJS1hUNJUCwB4RFMWB5V6mT14jEncPKhcfB5U4rP24+JwrO+PhgXIu/5WIisWuggi599ZHco=; Domain=alc.co.jp; Path=/'
+  pd_h_session_id: 'PD-H-SESSION-ID=IlnbH8buIQY=:1_4_1_ajqWzLhJQaItCwKF+vX+CmAMlowL3TK0MZFeF2sS-aTXe4W9|; Domain=.alc.co.jp; Path=/'
+  eowpuser: 'eowpuser=c754e873f5d11d69102c1b7eab428e61.0.0.0.0.1.1.0.1.0.1.50.1.1.0.0.Sat_ 11-Apr-2015 14:59:59 GMT; Domain=.eowp.alc.co.jp; Path=/'
 wordbook_pages:
   '1': # Page number
     file_path: 'sample_data/eowp_sample.html'

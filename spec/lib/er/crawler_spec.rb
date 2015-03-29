@@ -37,15 +37,18 @@ describe 'Unit tests for Er::Crawler' do
     end
 
     def _valid_crawler?(crawler, expected)
-      expect(crawler.base_url).to eq expected['base_url']
-      expect(crawler.paths).to eq expected['paths']
+      expect(crawler.urls).to eq expected['urls']
       expect(crawler.id).to eq @default_user.email
       expect(crawler.password).to eq @default_user.password
     end
   end
 
-  it 'return the login url' do
-    expect(@crawler.login_url).to eq @login_url
+  it 'return the login post url' do
+    expect(@crawler.login_post_url).to eq @login_post_url
+  end
+
+  it 'return the login get url' do
+    expect(@crawler.login_get_url).to eq @login_get_url
   end
 
   it 'return the word(ej) url' do
@@ -56,6 +59,8 @@ describe 'Unit tests for Er::Crawler' do
     context 'with valid id and password' do
       it 'logs in successfully and store a cookie' do
         @crawler.login
+        expect(@crawler.cookie).to match /LtpaToken2=/
+        expect(@crawler.cookie).to match /PD-H-SESSION-ID/
         expect(@crawler.cookie).to match /eowpuser=/
         expect(@crawler.cookie).not_to match /domain=/
         expect(@crawler.cookie).not_to match /path=/
@@ -64,8 +69,10 @@ describe 'Unit tests for Er::Crawler' do
 
     context 'with invalid id and password' do
       it 'cannot log in and set nil as the cookie parameter' do
-        FakeWeb.register_uri :post, @login_url, \
-          :'Set-Cookie' => nil if @config['fakeweb_enable']
+        if @config['fakeweb_enable']
+          FakeWeb.register_uri :post, @login_post_url, :'Set-Cookie' => nil
+          FakeWeb.register_uri :post, @login_get_url, :'Set-Cookie' => nil
+        end
         @crawler.password += '_edit'
         @crawler.login
         expect(@crawler.cookie).to be_nil

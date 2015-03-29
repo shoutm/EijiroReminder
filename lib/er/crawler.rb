@@ -4,24 +4,26 @@ require 'net/http'
 
 module Er
   class Crawler
-    attr_accessor :base_url, :paths, :id, :password, :cookie, :parser
+    attr_accessor :urls, :id, :password, :cookie, :parser
 
     def initialize(id: nil, password: nil, config_path: \
                    Rails.root.join('lib/config/er_crawler_config.yaml'))
       config = YAML.load_file config_path
-      @base_url = config['base_url']
-      @paths = config['paths']
+      @urls = config['urls']
       @id = id
       @password = password
     end
 
     def login
-      params = {MAIL_ADDRESS: @id, PASSWORD: @password, login: 'ログインする'}
-      resp = Net::HTTP.post_form(URI.parse(login_url), params)
-      begin
-        @cookie = resp['Set-Cookie'].split(';').grep(/eowpuser=/)[0] || nil
-      rescue
-        @cookie = nil
+      # To login, follow these procedure:
+      # 1. POST username and password to https://eowp.alc.co.jp/pkmslogin.form
+      #    You can receive cookies, "LtpaToken2" and "PD-H-SESSION-ID".
+      # 2. GET https://eowp.alc.co.jp/login
+      #    Will return a cookie of "eowpuser"
+      # Then query to http://eowp.alc.co.jp/anywhere with these 3 tokens.
+      ltpa, pd = _post_login_form
+      if ltpa and pd
+        _get_login_cookie(ltpa, pd)
       end
     end
 
@@ -93,6 +95,33 @@ module Er
 
     private
 
+    def _post_login_form
+      params = {username: @id, password: @password, :'login-form-type' => 'pwd'}
+      resp = Net::HTTP.post_form(URI.parse(login_post_url), params)
+      begin
+        cookies = resp['Set-Cookie'].split(',')
+        ltpa = cookies.grep(/LtpaToken2=/)[0].strip.split(';')[0] || nil
+        pd   = cookies.grep(/PD-H-SESSION-ID=/)[0].strip.split(';')[0] || nil
+      rescue
+        ltpa = pd = nil
+      end
+
+      return ltpa, pd
+    end
+
+    def _get_login_cookie(ltpatoken2, pd_h_session_id)
+      cookie = [ltpatoken2, pd_h_session_id].join(';')
+      resp = open(login_get_url, 'Cookie' => cookie)
+      begin
+        # This str still includes value, domain and path information
+        cookie_str = resp.meta['set-cookie'].split(',').grep(/eowpuser/)[0]
+        eowpuser = cookie_str.split(';')[0].strip
+        @cookie = [cookie, eowpuser].join(';')
+      rescue
+        @cookie = nil
+      end
+    end
+
     def _wordbook_url_with_page_index(index_str)
       index_str = index_str.to_s # Just in case
       return wordbook_ej_url + '?page=' + index_str
@@ -133,9 +162,8 @@ module Er
 
     def method_missing(method, *args, &block)
       if method.to_s =~ /(.*)_url$/
-        path_keyword = $1
-        return @paths[path_keyword]['proto'] + \
-          File.join(@base_url, @paths[path_keyword]['path'])
+        keyword = $1
+        return @urls[$1 + "_url"]
       end
 
       super

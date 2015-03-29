@@ -5,11 +5,7 @@ default_user:
   password: 'secret'
 
 # Eijiro settings
-base_url: '://eowp.alc.co.jp/' # should not include 'http' or 'https'
-paths:
-  login:
-    path: 'login'
-    proto: 'https'
-  wordbook_ej:
-    path: 'wordbook/ej'
-    proto: 'http'
+urls:
+  login_post_url: 'https://eowp.alc.co.jp/pkmslogin.form'
+  login_get_url: 'https://eowp.alc.co.jp/login'
+  wordbook_ej_url: 'http://eowp.alc.co.jp/wordbook/ej'
