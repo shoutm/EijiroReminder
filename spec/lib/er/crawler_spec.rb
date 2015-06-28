@@ -130,9 +130,9 @@ describe 'Unit tests for Er::Crawler' do
     private
 
     def _fetch_successful?(nokogiri_html)
-      tabenja = nokogiri_html.css('div#tabenja')
+      tabenja = nokogiri_html.css('li.tabenja')
       expect(tabenja.css('a[href="/wordbook/ej"]').empty?).to be true
-      tabjaen = nokogiri_html.css('div#tabjaen')
+      tabjaen = nokogiri_html.css('li.tabjaen')
       expect(tabjaen.css('a[href="/wordbook/je"]').empty?).to be false
     end
   end
