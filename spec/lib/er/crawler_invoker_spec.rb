@@ -34,7 +34,7 @@ describe 'Er::CrawlerInvoker' do
       skip unless @config['fakeweb_enable']
       @sample_data['wordbook_pages'].keys.each do |p_index|
         expected = @sample_data['wordbook_pages'][p_index]['words_and_tags']
-        check_er_items(expected)
+        check_existence_of_er_items(expected)
       end
     end
 
@@ -42,7 +42,7 @@ describe 'Er::CrawlerInvoker' do
       # This spec can be done only when fakeweb_enabled is true
       skip unless @config['fakeweb_enable']
       _check_with_block do |user, url, expected|
-        check_er_items_users(user, url, expected)
+        check_existence_of_er_items_users(user, url, expected)
       end
     end
 
@@ -50,7 +50,8 @@ describe 'Er::CrawlerInvoker' do
       # This spec can be done only when fakeweb_enabled is true
       skip unless @config['fakeweb_enable']
       _check_with_block do |user, url, expected|
-        check_er_items_users_tags(user, url, expected, @scraping_time)
+        check_existence_of_er_items_users_tags(user, url, expected,
+                                               @scraping_time)
       end
     end
 

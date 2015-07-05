@@ -152,16 +152,16 @@ describe 'Unit tests for Er::Crawler' do
       end
 
       it 'stores new entries in er_items table' do
-        check_er_items(@expected_words_and_tags)
+        check_existence_of_er_items(@expected_words_and_tags)
       end
 
       it 'stores new entries in er_items_users table' do
-        check_er_items_users(@default_user, @page_url,
+        check_existence_of_er_items_users(@default_user, @page_url,
                              @expected_words_and_tags)
       end
 
       it 'stores new entries in er_items_users_tags table' do
-        check_er_items_users_tags(@default_user, @page_url,
+        check_existence_of_er_items_users_tags(@default_user, @page_url,
                                   @expected_words_and_tags, @scraping_time)
       end
     end
@@ -178,23 +178,32 @@ describe 'Unit tests for Er::Crawler' do
       end
 
       it 'keeps having an existing entry in er_items table' do
-        check_er_items(@expected_words_and_tags)
+        check_existence_of_er_items(@object_alrdy_in_db)
       end
 
-      it 'keeps having an existing entry in er_items_users table' do
-        check_er_items_users(@default_user, @page_url,
-                             @expected_words_and_tags)
+      describe 'about er_items_users table' do
+        it 'keeps having an existing entry in er_items_users table' do
+          check_existence_of_er_items_users(@default_user, @page_url,
+                               @object_alrdy_in_db)
+        end
+
+        it 'changes an wordbook url of an existing entry in er_items_users table' do
+          check_existence_of_er_items_users(@default_user, @page_url,
+            @object_wch_url_is_changed_in_db)
+          check_absence_of_er_items_users(@default_user, @changed_url,
+            @object_wch_url_is_changed_in_db)
+        end
       end
 
-      describe 'er_items_users_tags table' do
+      describe 'about er_items_users_tags table' do
         it 'keeps having an existing entry' do
-          check_er_items_users_tags(@default_user, @page_url,
-            @existing_entry, @registration_date)
+          check_existence_of_er_items_users_tags(@default_user, @page_url,
+            @object_alrdy_in_db, @registration_date)
         end
 
         it 'removes tag which has been removed in Eijiro page' do
-          check_er_items_users_tags(@default_user, @page_url,
-            @existing_entry_tag_removed, @registration_date)
+          check_existence_of_er_items_users_tags(@default_user, @page_url,
+            @object_wch_lost_a_tag, @registration_date)
           expect {
             Er::ItemsUsersTag.find(@removed_u_item_tag.id)
           }.to raise_error ActiveRecord::RecordNotFound
@@ -206,6 +215,7 @@ describe 'Unit tests for Er::Crawler' do
 
     def _initialize_variables
       @page_url = @wordbook_ej_url
+      @changed_url = 'http://test.com'
       @expected_words_and_tags =
         @sample_data['wordbook_pages']['1']['words_and_tags'].deep_dup
     end
@@ -217,35 +227,43 @@ describe 'Unit tests for Er::Crawler' do
 
     def _preparation
       @registration_date = Time.now
-      _populate_existing_entry_in_db
-      _populate_tag_removed_entry
-    end
 
-    def _populate_existing_entry_in_db
-      # Populating existing entry
+      # To populate an entry
       e_id = @expected_words_and_tags.keys.first
+      @object_alrdy_in_db = {e_id => @expected_words_and_tags[e_id]}
       _register_words_and_tags e_id, @registration_date
-      existing_wat = @expected_words_and_tags[e_id]
-      @existing_entry = {e_id => existing_wat}
+
+      # To populate an entry in which a wordbook_url
+      # in er_items_users table doesn't match with an entry in
+      # an object which is going to be populated later.
+      # FIXME: Second test data has Invalid tag so third is picked.
+      #        This code depends on test data...
+      e_id = @expected_words_and_tags.keys.third
+      @object_wch_url_is_changed_in_db =
+        {e_id => @expected_words_and_tags[e_id]}
+      populated_entry = _register_words_and_tags e_id, @registration_date
+      _change_wordbook_url_of populated_entry[:u_item]
+
+      # To populate an entry in db with some tags and remove one of the tags
+      # from an object which is going to be populated later.
+      e_id = @expected_words_and_tags.keys.last
+      @object_wch_lost_a_tag = {e_id => @expected_words_and_tags[e_id]}
+      populated_entry = _register_words_and_tags e_id, @registration_date
+      @removed_u_item_tag = populated_entry[:u_item_tags].first
+      _remove_tag_from_object \
+        removing_tag_name: @removed_u_item_tag.tag.tag,
+        object: @object_wch_lost_a_tag
     end
 
-    def _populate_tag_removed_entry
-      # Populate an existing entry and delete a tag from
-      # the expected object
-      before_populating = Time.now
-      e_id = @expected_words_and_tags.keys.last
-      _register_words_and_tags e_id, @registration_date
-      existing_wat = @expected_words_and_tags[e_id]
-      removed_tag_name = existing_wat['tags'].pop
+    def _change_wordbook_url_of(u_item)
+      u_item.wordbook_url = @changed_url
+      u_item.save
+    end
 
-      # Finding out the removed tag object
-      populated_u_item_tags = Er::ItemsUsersTag.where('created_at >= ?',
-                                                      before_populating)
-      @removed_u_item_tag = populated_u_item_tags.find do |u_item_tag|
-        u_item_tag.tag.tag == removed_tag_name
-      end
-
-      @existing_entry_tag_removed = {e_id => existing_wat}
+    def _remove_tag_from_object(removing_tag_name: '', object: nil)
+      e_id = object.keys.first
+      tags = object[e_id]['tags']
+      tags.delete(removing_tag_name)
     end
 
     def _register_words_and_tags(e_id, registration_date)
@@ -254,11 +272,14 @@ describe 'Unit tests for Er::Crawler' do
       item = create(:er_item, e_id: e_id, name: word)
       u_item = create(:er_items_user, user: @default_user, item: item,
                                       wordbook_url: @page_url)
+      u_item_tags = []
       tags_ary.each do |tag_name|
         tag = Er::Tag.find_by_tag(tag_name)
-        create(:er_items_users_tag, items_user: u_item, tag: tag,
-               registration_date: registration_date)
+        u_item_tags << create(:er_items_users_tag, items_user: u_item,
+               tag: tag, registration_date: registration_date)
       end
+
+      return {item: item, u_item: u_item, u_item_tags: u_item_tags}
     end
   end
 end

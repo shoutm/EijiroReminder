@@ -7,7 +7,7 @@ module Er
       create(:test_tagdone)
     end
 
-    def check_er_items(expected_words_and_tags)
+    def check_existence_of_er_items(expected_words_and_tags)
       expect {
         expected_words_and_tags.each_key do |e_id|
           word = expected_words_and_tags[e_id]['word']
@@ -16,19 +16,31 @@ module Er
       }.not_to raise_error
     end
 
-    def check_er_items_users(user, page_url, expected_words_and_tags)
+    def check_existence_of_er_items_users(
+        user, page_url, expected_words_and_tags)
+      _check_er_items_users(true, user, page_url, expected_words_and_tags)
+    end
+
+    def check_absence_of_er_items_users(
+        user, page_url, expected_words_and_tags)
+      _check_er_items_users(false, user, page_url, expected_words_and_tags)
+    end
+
+    def _check_er_items_users(
+        bool, user, page_url, expected_words_and_tags)
       expect {
+        expected_num = bool ? 1 : 0
         expected_words_and_tags.each_key do |e_id|
           item = Er::Item.find_by_e_id(e_id)
           expect(Er::ItemsUser.where(user_id: user.id,
             item_id: item.id,
-            wordbook_url: page_url).size).to eq(1)
+            wordbook_url: page_url).size).to eq(expected_num)
         end
       }.not_to raise_error
     end
 
-    def check_er_items_users_tags(user, page_url, expected_words_and_tags,
-                                  registration_date)
+    def check_existence_of_er_items_users_tags(
+        user, page_url, expected_words_and_tags, registration_date)
       expect {
         expected_words_and_tags.each_key do |e_id|
           tags = expected_words_and_tags[e_id]['tags']

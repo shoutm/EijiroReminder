@@ -133,9 +133,17 @@ module Er
     end
 
     def _store_er_items_user(user_id, item_id, page_url)
-      items_user_data = {user_id: user_id, item_id: item_id,
-                         wordbook_url: page_url}
-      return Er::ItemsUser.find_or_create_by(items_user_data)
+      u_items = Er::ItemsUser.where(user_id: user_id, item_id: item_id)
+      u_item = nil
+      if u_items.size == 0
+        u_item = Er::ItemsUser.create(user_id: user_id, item_id: item_id,
+                                      wordbook_url: page_url)
+      else
+        u_item = u_items.first
+        u_item.wordbook_url = page_url
+        u_item.save
+      end
+      return u_item
     end
 
     def _store_and_delete_er_items_users_tags(u_item_id, tag_name_ary,
