@@ -145,28 +145,27 @@ describe 'Unit tests for Er::Reminder' do
         end
       end
     end
+  end
 
-    describe 'according to the max number of picking items' do
-      before :each do
-        @user = create(:sample_user)
+  describe 'The max number of picking items' do
+    before :each do
+      @user = create(:sample_user)
+    end
+
+    context 'if the number of picked items is below the max value' do
+      it "doesn't truncate the items" do
+        _create_items_and_check(@user,
+                                Er::Reminder.MAX_PICKUP_ITEMS_NUM,
+                                Er::Reminder.MAX_PICKUP_ITEMS_NUM)
       end
+    end
 
-      context 'if the number of picked items is below the max value' do
-        it "doesn't truncate the items" do
-          _create_items_and_check(@user,
-                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM,
-                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM)
-        end
+    context 'if the number of picked items is over the max value' do
+      it 'truncates the items up until the max number' do
+        _create_items_and_check(@user,
+                                Er::Reminder.MAX_PICKUP_ITEMS_NUM + 1,
+                                Er::Reminder.MAX_PICKUP_ITEMS_NUM)
       end
-
-      context 'if the number of picked items is over the max value' do
-        it 'truncates the items up until the max number' do
-          _create_items_and_check(@user,
-                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM + 1,
-                                  Er::Reminder.MAX_PICKUP_ITEMS_NUM)
-        end
-      end
-
     end
   end
 
@@ -208,6 +207,26 @@ describe 'Unit tests for Er::Reminder' do
         allow(Er::ReminderMailer).to receive(:reminder).and_return(nil)
         sample_user = create(:sample_user)
         expect{@reminder.send_items_by_email(sample_user)}.not_to raise_error
+      end
+    end
+  end
+
+  describe 'Body of a sent email' do
+    it 'sorts items by the page order' do
+      user = create(:sample_user)
+      num = 10
+      url_base = 'http://eowp.alc.co.jp/wordbook/ej&page='
+      Array(1..num).shuffle.each do |i|
+        create(:er_items_user, user: user, wordbook_url: url_base + i.to_s)
+      end
+      @reminder.send_items_by_email(user)
+
+      i = 1
+      open_last_email.body.to_s.each_line do |line|
+        if(line.strip =~ /#{url_base}/)
+          expect(line.strip).to eq url_base + i.to_s
+          i += 1
+        end
       end
     end
   end
