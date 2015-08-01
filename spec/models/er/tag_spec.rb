@@ -31,7 +31,7 @@ describe Er::Tag do
 
   it 'is invalid when there is an existing entry with the same order' do
     create(:'test_tag1')
-    tag = build(:'test_tag1')
+    tag = Er::Tag.new(attributes_for(:'test_tag1'))
     expect(tag.valid?).to be_falsey
     expect(tag.errors[:order].size).to eq(1)
   end
