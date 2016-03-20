@@ -34,4 +34,4 @@ Run the command below and type 'yes'. But THIS WILL DELETE ALL OF YOUR DATA. Ple
 == How to run the test suite
 Run the command below.
 
-  $ rake exec rspec
+  $ bundle exec rspec
