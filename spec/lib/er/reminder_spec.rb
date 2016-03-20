@@ -145,6 +145,16 @@ describe 'Unit tests for Er::Reminder' do
         end
       end
     end
+
+    describe 'according to disable flag' do
+      it 'does not pick up item' do
+        item = create(:er_item, disabled: true)
+        items_user = create(:er_items_user, item: item)
+        picked_items = @reminder.send(:'_pick_items_from_db',
+                                      items_user.user_id)
+        expect(picked_items).to eq []
+      end
+    end
   end
 
   describe 'The max number of picking items' do

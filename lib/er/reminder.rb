@@ -49,7 +49,8 @@ module Er
 
     def _pick_items_from_db(user_id)
       picked_items = []
-      items_user_ary = Er::ItemsUser.where(user_id: user_id)
+      items_user_ary = Er::ItemsUser.joins(:item).where(
+        er_items: {disabled: false}, user_id: user_id)
       items_user_ary.each do |items_user|
         tags_info = Er::ItemsUsersTag.where(items_user: items_user.id)
 

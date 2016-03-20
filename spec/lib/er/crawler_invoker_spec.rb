@@ -19,12 +19,16 @@ describe 'Er::CrawlerInvoker' do
     before :each do
       # This spec can be done only when fakeweb_enabled is true
       skip unless @config['fakeweb_enable']
-      Timecop.freeze
-      @scraping_time = Time.now
       # Create Er::Tag entries
       create_test_tags
       # There is the default user in db so create the second user.
       @sample_user = create(:sample_user)
+      # Create an er_item entry which will not be fetched. This entry will be
+      # disabled after crawling.
+      @disabled_item = create(:er_item)
+
+      Timecop.freeze
+      @scraping_time = Time.now
       Er::CrawlerInvoker.new.run_for_all_users
       Timecop.return
     end
@@ -36,6 +40,11 @@ describe 'Er::CrawlerInvoker' do
         expected = @sample_data['wordbook_pages'][p_index]['words_and_tags']
         check_existence_of_er_items(expected)
       end
+    end
+
+    it 'disables the entry which is in db but not fetched from web' do
+      skip unless @config['fakeweb_enable']
+      expect(Er::Item.find(@disabled_item.id).disabled).to be true
     end
 
     it 'stores new entries in er_items_users table' do
