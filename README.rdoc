@@ -10,7 +10,7 @@ you can be reminded when you might forget them.
 
 See http://eowp.alc.co.jp/info/ for more details about Eijiro Pro.
 
-== Required softwares and thier versions
+== Required softwares and their versions
 * Ruby: 2.1.1
 * PostgreSQL: 9.3.5
 
